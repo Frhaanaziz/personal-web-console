@@ -33,7 +33,7 @@ const SignInForm = ({ callbackUrl, error }: Props) => {
   const id = useId();
 
   const defaultValues = {
-    username: '',
+    email: '',
     password: '',
   };
 
