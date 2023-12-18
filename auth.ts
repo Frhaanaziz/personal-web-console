@@ -35,7 +35,7 @@ export const authOptions = {
         });
 
         if (!user || !user?.hashedPassword) {
-          throw new Error('No user found');
+          throw new Error('Incorrect email or password');
         }
 
         const passwordMatch = await comparePasswordAction({
