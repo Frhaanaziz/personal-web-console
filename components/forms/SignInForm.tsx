@@ -23,6 +23,9 @@ import { useEffect, useId } from 'react';
 // import toast from 'react-hot-toast';
 // import { catchError } from "@/lib/utils"
 import { signInSchema } from '@/lib/validators/auth';
+import { getErrorMessage } from '@/lib/utils';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   callbackUrl: string | string[] | undefined;
@@ -30,7 +33,7 @@ interface Props {
 }
 
 const SignInForm = ({ callbackUrl, error }: Props) => {
-  const id = useId();
+  const router = useRouter();
 
   const defaultValues = {
     email: '',
@@ -42,25 +45,28 @@ const SignInForm = ({ callbackUrl, error }: Props) => {
     defaultValues,
   });
 
-  const { handleSubmit, control, formState } = form;
+  const { handleSubmit, control, formState, reset } = form;
   const { isSubmitting } = formState;
-
-  //   useEffect(() => {
-  //     if (error && typeof error === 'string') toast.error(error, { id });
-  //   }, [error, id]);
 
   async function onSubmit({ email, password }: z.infer<typeof signInSchema>) {
     try {
-      await signIn('credentials', {
+      const result = await signIn('credentials', {
         email,
         password,
-        // redirect: true,
+        redirect: false,
         callbackUrl:
           typeof callbackUrl === 'string'
             ? callbackUrl
             : process.env.NEXT_PUBLIC_BASE_URL!,
       });
+      if (!result) throw new Error('Something went wrong, please try again.');
+      if (result.error) throw new Error(result.error);
+
+      reset(defaultValues);
+      toast.success('Signed in successfully!');
+      router.push(result.url ?? process.env.NEXT_PUBLIC_BASE_URL!);
     } catch (error) {
+      toast.error(getErrorMessage(error));
       console.error('SignInForm', error);
     }
   }
