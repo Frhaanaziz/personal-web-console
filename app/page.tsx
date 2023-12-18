@@ -1,25 +1,13 @@
 import { auth } from '@/auth';
-import { signUpAction } from './_actions/auth';
-import { getSession, useSession } from 'next-auth/react';
+
+import TestingButton from '@/components/TestingButton';
 
 export default async function Home() {
+  const session = await auth();
+  // console.log(session);
   return (
-    <main className="">
-      {/* <button
-        onClick={async () => {
-          try {
-            await signUpAction({
-              email: 'jokowi@gmail.com',
-              password: 'admin123',
-            });
-            console.log('success');
-          } catch (error) {
-            console.error(error);
-          }
-        }}
-      >
-        Register Jokowi
-      </button> */}
+    <main>
+      <TestingButton />
     </main>
   );
 }

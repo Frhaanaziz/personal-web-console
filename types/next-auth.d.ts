@@ -20,13 +20,7 @@ declare module 'next-auth' {
     } & DefaultSession['user'];
   }
   interface User {
-    // id: string;
-    // email: string | null;
-    // emailVerified?: Date | null;
-    // hashedPassword: string;
     role?: string;
-    // createdAt: Date;
-    // updatedAt: Date;
     accessToken?: string;
   }
 }
