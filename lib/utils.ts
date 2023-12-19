@@ -56,7 +56,7 @@ export async function checkSession() {
 }
 
 export function createEmailToken(userId: string) {
-  return jwt.sign({ user: userId }, process.env.EMAIL_SECRET!, {
+  return jwt.sign({ user: { id: userId } }, process.env.EMAIL_SECRET!, {
     expiresIn: '1d',
   });
 }
