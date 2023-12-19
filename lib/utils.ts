@@ -66,3 +66,11 @@ export function createEmailToken(userId: string) {
     expiresIn: '1d',
   });
 }
+
+export function checkEmailToken(token: string) {
+  try {
+    return jwt.verify(token, process.env.EMAIL_SECRET!);
+  } catch (error) {
+    return getErrorMessage(error);
+  }
+}
