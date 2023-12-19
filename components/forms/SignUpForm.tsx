@@ -15,19 +15,17 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
-import { Checkbox } from '../ui/checkbox';
 import { Loader2 } from 'lucide-react';
-import { signIn } from 'next-auth/react';
 import { signUpSchema } from '@/lib/validators/auth';
 import { getErrorMessage } from '@/lib/utils';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
 import { signUpAction } from '@/app/_actions/auth';
 
 const SignUpForm = () => {
   const defaultValues = {
     email: '',
     password: '',
+    confirmPassword: '',
   };
 
   const form = useForm<z.infer<typeof signUpSchema>>({
@@ -74,6 +72,19 @@ const SignUpForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type="password" {...field} disabled={isSubmitting} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm password</FormLabel>
                 <FormControl>
                   <Input type="password" {...field} disabled={isSubmitting} />
                 </FormControl>
