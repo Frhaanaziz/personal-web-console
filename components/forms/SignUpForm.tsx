@@ -24,11 +24,7 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { signUpAction } from '@/app/_actions/auth';
 
-interface Props {
-  callbackUrl: string | string[] | undefined;
-}
-
-const SignUpForm = ({ callbackUrl }: Props) => {
+const SignUpForm = () => {
   const defaultValues = {
     email: '',
     password: '',
@@ -86,35 +82,10 @@ const SignUpForm = ({ callbackUrl }: Props) => {
             )}
           />
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Checkbox id="remember-me" disabled={isSubmitting} />
-              <label
-                htmlFor="remember-me"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Remember me
-              </label>
-            </div>
-
-            <div className="text-sm leading-6">
-              <Link
-                href="#"
-                className="font-semibold text-primary hover:text-primary/80"
-              >
-                Forgot password?
-              </Link>
-            </div>
-          </div>
-
-          <div>
-            <Button type="submit" disabled={isSubmitting} className="w-full">
-              {isSubmitting && (
-                <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-              )}
-              Sign Up
-            </Button>
-          </div>
+          <Button type="submit" disabled={isSubmitting} className="w-full">
+            {isSubmitting && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
+            Sign Up
+          </Button>
         </form>
       </Form>
 

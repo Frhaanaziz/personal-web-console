@@ -110,7 +110,7 @@ const SignInForm = ({ callbackUrl }: Props) => {
 
             <div className="text-sm leading-6">
               <Link
-                href="#"
+                href="/auth/reset-password"
                 className="font-semibold text-primary hover:text-primary/80"
               >
                 Forgot password?
