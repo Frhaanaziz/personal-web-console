@@ -36,7 +36,7 @@ export async function signUpAction(rawData: z.infer<typeof signUpSchema>) {
     if (exist) {
       const passwordMatch = await comparePasswordAction({
         password: password,
-        hashedPassword: exist.hashedPassword,
+        hashedPassword: exist.hashedPassword!,
       });
       if (!passwordMatch) throw new Error('Incorrect email or password');
 
@@ -143,6 +143,7 @@ export async function resetPasswordAction(
       },
       data: {
         hashedPassword,
+        emailVerified: new Date(),
       },
     });
 

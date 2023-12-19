@@ -9,7 +9,7 @@ const NotFoundPage = () => {
   const router = useRouter();
 
   return (
-    <main className="bg-white dark:bg-gray-900 ">
+    <main>
       <div className="container min-h-screen px-6 py-12 mx-auto lg:flex lg:items-center lg:gap-12">
         <div className="wf-ull lg:w-1/2">
           <p className="text-sm font-medium text-primary">404 error</p>
@@ -41,7 +41,7 @@ const NotFoundPage = () => {
         <div className="relative w-full mt-12 lg:w-1/2 lg:mt-0">
           <Image
             className="w-full max-w-lg lg:mx-auto"
-            src="/404.svg"
+            src="/icons/404.svg"
             alt="404"
             width={512}
             height={165}
