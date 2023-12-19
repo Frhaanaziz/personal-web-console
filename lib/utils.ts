@@ -55,6 +55,12 @@ export async function checkSession() {
   return session;
 }
 
+export function createAccessToken(userId: string) {
+  return jwt.sign({ user: { id: userId } }, process.env.NEXTAUTH_SECRET!, {
+    expiresIn: '1h',
+  });
+}
+
 export function createEmailToken(userId: string) {
   return jwt.sign({ user: { id: userId } }, process.env.EMAIL_SECRET!, {
     expiresIn: '1d',

@@ -7,8 +7,8 @@ import { NextAuthOptions, User, getServerSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import prisma from '@/prisma/db';
-import jwt from 'jsonwebtoken';
 import { comparePasswordAction } from './app/_actions';
+import { createAccessToken } from './lib/utils';
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
@@ -20,7 +20,7 @@ export const authOptions = {
         email: { label: 'Email', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials, req): Promise<User | null> {
+      async authorize(credentials): Promise<User | null> {
         if (!credentials) throw new Error('No credentials provided');
 
         if (!credentials.email || !credentials.password) {
@@ -48,11 +48,7 @@ export const authOptions = {
           throw new Error('Incorrect email or password');
         }
 
-        const accessToken = jwt.sign(
-          { id: user.id },
-          process.env.NEXTAUTH_SECRET!,
-          { expiresIn: '1h' }
-        );
+        const accessToken = createAccessToken(user.id);
 
         return { ...user, accessToken };
       },
@@ -82,7 +78,6 @@ export const authOptions = {
           ...session.user,
           id: token.id,
           role: token.role,
-          // accessToken: token.accessToken,
         },
       };
     },

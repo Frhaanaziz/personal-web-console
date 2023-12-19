@@ -67,64 +67,75 @@ const SignInForm = ({ callbackUrl }: Props) => {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input {...field} disabled={isSubmitting} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input type="password" {...field} disabled={isSubmitting} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <>
+      <Form {...form}>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <FormField
+            control={control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input {...field} disabled={isSubmitting} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type="password" {...field} disabled={isSubmitting} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Checkbox id="remember-me" disabled={isSubmitting} />
-            <label
-              htmlFor="remember-me"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Remember me
-            </label>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Checkbox id="remember-me" disabled={isSubmitting} />
+              <label
+                htmlFor="remember-me"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Remember me
+              </label>
+            </div>
+
+            <div className="text-sm leading-6">
+              <Link
+                href="#"
+                className="font-semibold text-primary hover:text-primary/80"
+              >
+                Forgot password?
+              </Link>
+            </div>
           </div>
 
-          <div className="text-sm leading-6">
-            <Link
-              href="#"
-              className="font-semibold text-primary hover:text-primary/80"
-            >
-              Forgot password?
-            </Link>
+          <div>
+            <Button type="submit" disabled={isSubmitting} className="w-full">
+              {isSubmitting && (
+                <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+              )}
+              Sign in
+            </Button>
           </div>
-        </div>
+        </form>
+      </Form>
 
-        <div>
-          <Button type="submit" disabled={isSubmitting} className="w-full">
-            {isSubmitting && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
-            Sign in
-          </Button>
-        </div>
-      </form>
-    </Form>
+      <Link
+        href="/signup"
+        className="inline-block mt-4 underline text-sm text-muted-foreground"
+      >
+        Don&apos;t have an account? Sign up
+      </Link>
+    </>
   );
 };
 

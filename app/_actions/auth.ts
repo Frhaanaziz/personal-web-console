@@ -11,6 +11,7 @@ import { z } from 'zod';
 import jwt from 'jsonwebtoken';
 import { Resend } from 'resend';
 import EmailVerification from '@/email/EmailVerification';
+import { comparePasswordAction, hashPassword } from '.';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -29,10 +30,19 @@ export async function signUpAction(rawData: z.infer<typeof signUpSchema>) {
         email,
       },
     });
-    if (exist && exist.emailVerified) throw new Error('Email already verified');
+    if (exist) {
+      const passwordMatch = await comparePasswordAction({
+        password: password,
+        hashedPassword: exist.hashedPassword,
+      });
+      if (!passwordMatch) throw new Error('Incorrect email or password');
+
+      if (exist.emailVerified)
+        throw new Error('Email already verified, please login');
+    }
 
     if (!exist) {
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await hashPassword(password);
 
       const user = await prisma.user.create({
         data: {
