@@ -2,38 +2,77 @@
 import bcrypt from 'bcrypt';
 import prisma from '@/prisma/db';
 import { signUpSchema } from '@/lib/validators/auth';
-import { checkSession, checkToken, getZodErrorMessage } from '@/lib/utils';
+import {
+  createEmailToken,
+  getErrorMessage,
+  getZodErrorMessage,
+} from '@/lib/utils';
 import { z } from 'zod';
 import jwt from 'jsonwebtoken';
-import { auth } from '@/auth';
+import { Resend } from 'resend';
+import EmailVerification from '@/email/EmailVerification';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function signUpAction(rawData: z.infer<typeof signUpSchema>) {
   const zodResult = signUpSchema.safeParse(rawData);
   if (!zodResult.success)
     return {
-      error: `signUpAction ${getZodErrorMessage(zodResult)}`,
+      error: getZodErrorMessage(zodResult),
       data: null,
     };
   const { email, password, role } = zodResult.data;
 
-  const exist = await prisma.user.findUnique({
-    where: {
-      email,
-    },
-  });
-  if (exist) throw new Error('Email already exists');
+  try {
+    const exist = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+    if (exist && exist.emailVerified) throw new Error('Email already verified');
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+    if (!exist) {
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = await prisma.user.create({
-    data: {
-      email,
-      hashedPassword,
-      role,
-    },
-  });
+      const user = await prisma.user.create({
+        data: {
+          email,
+          hashedPassword,
+          role,
+        },
+      });
 
-  return { data: user, error: null };
+      const emailToken = createEmailToken(user.id);
+
+      // const result = await resend.emails.send({
+      resend.emails.send({
+        from: 'Portfolio <portfolio-console@aththariq.com>',
+        to: [email],
+        subject: 'Email Verification',
+        react: EmailVerification({
+          url: `${process.env
+            .NEXT_PUBLIC_BASE_URL!}/api/auth/verify-email?token=${emailToken}`,
+        }) as React.ReactElement,
+      });
+    } else if (!exist.emailVerified) {
+      const emailToken = createEmailToken(exist.id);
+
+      // const result = await resend.emails.send({
+      resend.emails.send({
+        from: 'Portfolio <portfolio-console@aththariq.com>',
+        to: [email],
+        subject: 'Email Verification',
+        react: EmailVerification({
+          url: `${process.env
+            .NEXT_PUBLIC_BASE_URL!}/api/auth/verify-email?token=${emailToken}`,
+        }) as React.ReactElement,
+      });
+    }
+
+    return { error: null };
+  } catch (error) {
+    return { error: getErrorMessage(error) };
+  }
 }
 
 export async function deleteAllUsersAction() {

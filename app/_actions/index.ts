@@ -10,3 +10,4 @@ export async function comparePasswordAction({
 }) {
   return await bcrypt.compare(password, hashedPassword);
 }
+

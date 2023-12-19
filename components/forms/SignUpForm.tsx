@@ -18,51 +18,39 @@ import Link from 'next/link';
 import { Checkbox } from '../ui/checkbox';
 import { Loader2 } from 'lucide-react';
 import { signIn } from 'next-auth/react';
-import { signInSchema } from '@/lib/validators/auth';
+import { signUpSchema } from '@/lib/validators/auth';
 import { getErrorMessage } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { signUpAction } from '@/app/_actions/auth';
 
 interface Props {
   callbackUrl: string | string[] | undefined;
 }
 
-const SignInForm = ({ callbackUrl }: Props) => {
-  const router = useRouter();
-
+const SignUpForm = ({ callbackUrl }: Props) => {
   const defaultValues = {
     email: '',
     password: '',
   };
 
-  const form = useForm<z.infer<typeof signInSchema>>({
-    resolver: zodResolver(signInSchema),
+  const form = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
     defaultValues,
   });
 
   const { handleSubmit, control, formState, reset } = form;
   const { isSubmitting } = formState;
 
-  async function onSubmit({ email, password }: z.infer<typeof signInSchema>) {
+  async function onSubmit(formValues: z.infer<typeof signUpSchema>) {
     try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-        callbackUrl:
-          typeof callbackUrl === 'string'
-            ? callbackUrl
-            : process.env.NEXT_PUBLIC_BASE_URL!,
-      });
-      if (!result) throw new Error('Something went wrong, please try again.');
-      if (result.error) throw new Error(result.error);
+      const result = await signUpAction(formValues);
 
       reset(defaultValues);
-      toast.success('Signed in successfully!');
-      router.push(result.url ?? process.env.NEXT_PUBLIC_BASE_URL!);
+      toast.success('Please check your email to verify your account');
     } catch (error) {
       toast.error(getErrorMessage(error));
-      console.error('SignInForm', error);
+      console.error('SignUpForm', error);
     }
   }
 
@@ -120,7 +108,7 @@ const SignInForm = ({ callbackUrl }: Props) => {
         <div>
           <Button type="submit" disabled={isSubmitting} className="w-full">
             {isSubmitting && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
-            Sign in
+            Sign Up
           </Button>
         </div>
       </form>
@@ -128,4 +116,4 @@ const SignInForm = ({ callbackUrl }: Props) => {
   );
 };
 
-export default SignInForm;
+export default SignUpForm;

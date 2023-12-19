@@ -7,7 +7,6 @@ import { NextAuthOptions, User, getServerSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import prisma from '@/prisma/db';
-import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { comparePasswordAction } from './app/_actions';
 
@@ -34,9 +33,11 @@ export const authOptions = {
           },
         });
 
-        if (!user || !user?.hashedPassword) {
+        if (!user || !user?.hashedPassword)
           throw new Error('Incorrect email or password');
-        }
+
+        if (!user.emailVerified)
+          throw new Error('Please confirm your email to login');
 
         const passwordMatch = await comparePasswordAction({
           password: credentials.password,
@@ -58,9 +59,7 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, trigger }) {
-      // console.log('jwt callback', { token, user });
-
+    async jwt({ token, user, trigger, account }) {
       // if (trigger === 'update' && session?.name) {
       //   token.name = session.name;
       // }
@@ -68,7 +67,6 @@ export const authOptions = {
       if (user) {
         return {
           ...token,
-          // ...user,
           id: user.id,
           role: user.role,
           accessToken: user.accessToken,
@@ -77,8 +75,6 @@ export const authOptions = {
       return token;
     },
     async session({ session, token }) {
-      // console.log('session callback', { session, token });
-
       return {
         ...session,
         accessToken: token.accessToken,
@@ -92,13 +88,12 @@ export const authOptions = {
     },
   },
   pages: {
-    // signOut: '/signout',
     signIn: '/signin',
+    newUser: '/signup',
   },
   session: {
     strategy: 'jwt',
   },
-  // debug: process.env.NODE_ENV !== 'production',
 } satisfies NextAuthOptions;
 
 export function auth(
