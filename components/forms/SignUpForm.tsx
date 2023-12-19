@@ -23,6 +23,7 @@ import { signUpAction } from '@/app/_actions/auth';
 
 const SignUpForm = () => {
   const defaultValues = {
+    name: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -53,6 +54,20 @@ const SignUpForm = () => {
     <>
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <FormField
+            control={control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input {...field} disabled={isSubmitting} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={control}
             name="email"

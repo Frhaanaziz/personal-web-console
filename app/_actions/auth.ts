@@ -25,7 +25,7 @@ export async function signUpAction(rawData: z.infer<typeof signUpSchema>) {
       error: getZodErrorMessage(zodResult),
       data: null,
     };
-  const { email, password } = zodResult.data;
+  const { email, password, name } = zodResult.data;
 
   try {
     const exist = await prisma.user.findUnique({
@@ -49,6 +49,7 @@ export async function signUpAction(rawData: z.infer<typeof signUpSchema>) {
 
       const user = await prisma.user.create({
         data: {
+          name,
           email,
           hashedPassword,
         },
