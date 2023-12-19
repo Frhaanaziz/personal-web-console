@@ -11,7 +11,7 @@ export async function GET(request: Request) {
   try {
     const decoded = jwt.verify(token, process.env.EMAIL_SECRET!);
     if (typeof decoded === 'string') {
-      throw new Error('Invalid token');
+      throw new Error('Invalid token, please request a new one.');
     }
 
     await prisma.user.update({

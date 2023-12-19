@@ -83,8 +83,8 @@ export const authOptions = {
     },
   },
   pages: {
-    signIn: '/signin',
-    newUser: '/signup',
+    signIn: '/auth/signin',
+    newUser: '/auth/signup',
   },
   session: {
     strategy: 'jwt',

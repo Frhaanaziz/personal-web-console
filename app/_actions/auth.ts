@@ -1,5 +1,4 @@
 'use server';
-import bcrypt from 'bcrypt';
 import prisma from '@/prisma/db';
 import { signUpSchema } from '@/lib/validators/auth';
 import {
@@ -8,7 +7,6 @@ import {
   getZodErrorMessage,
 } from '@/lib/utils';
 import { z } from 'zod';
-import jwt from 'jsonwebtoken';
 import { Resend } from 'resend';
 import EmailVerification from '@/email/EmailVerification';
 import { comparePasswordAction, hashPassword } from '.';

@@ -119,7 +119,7 @@ const SignUpForm = ({ callbackUrl }: Props) => {
       </Form>
 
       <Link
-        href="/signin"
+        href="/auth/signin"
         className="inline-block mt-4 underline text-sm text-muted-foreground"
       >
         Have an account? Sign in
