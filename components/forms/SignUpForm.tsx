@@ -20,6 +20,8 @@ import { signUpSchema } from '@/lib/validators/auth';
 import { getErrorMessage } from '@/lib/utils';
 import { toast } from 'sonner';
 import { signUpAction } from '@/app/_actions/auth';
+import Image from 'next/image';
+import { signIn } from 'next-auth/react';
 
 const SignUpForm = () => {
   const defaultValues = {
@@ -114,6 +116,28 @@ const SignUpForm = () => {
           </Button>
         </form>
       </Form>
+
+      <div className="relative mt-6">
+        <div className="absolute inset-0 flex items-center" aria-hidden="true">
+          <div className="w-full border-t-2" />
+        </div>
+        <div className="relative flex justify-center text-sm font-medium leading-6">
+          <span className="bg-background px-5">Or continue with</span>
+        </div>
+      </div>
+
+      <div className="mt-6">
+        <Button className={'gap-3 w-full'} onClick={() => signIn('google')}>
+          <Image
+            src="/icons/google.svg"
+            width={20}
+            height={20}
+            alt="google"
+            className="h-5 w-5 "
+          />
+          <span className="text-sm font-semibold leading-6">Google</span>
+        </Button>
+      </div>
 
       <Link
         href="/auth/signin"

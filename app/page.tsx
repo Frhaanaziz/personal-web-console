@@ -4,7 +4,7 @@ import TestingButton from '@/components/TestingButton';
 
 export default async function Home() {
   const session = await auth();
-  // console.log(session);
+  console.log(session);
   return (
     <main>
       <TestingButton />
