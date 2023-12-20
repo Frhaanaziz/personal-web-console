@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/context/ThemeProvider';
 import NextTopLoader from 'nextjs-toploader';
 import ToastProvider from '@/context/ToastProvider';
+import { webPrimaryColor } from '@/lib/constant';
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -31,7 +32,7 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" disableTransitionOnChange>
           <ToastProvider>
-            <NextTopLoader color={'#2663E9'} />
+            <NextTopLoader color={webPrimaryColor} />
             {children}
           </ToastProvider>
         </ThemeProvider>
