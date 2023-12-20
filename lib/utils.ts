@@ -3,6 +3,8 @@ import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
 import jwt from 'jsonwebtoken';
 import { auth } from '@/auth';
+import { notFound } from 'next/navigation';
+import { Session } from 'next-auth';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -34,26 +36,18 @@ export function getZodErrorMessage(result: z.SafeParseError<any>) {
   return errorMessage;
 }
 
-export async function checkToken() {
-  const session = await auth();
-  if (!session) return false;
+// export async function checkToken() {
+//   const session = await auth();
+//   if (!session) return false;
 
-  const token = session.accessToken as string;
+//   const token = session.accessToken as string;
 
-  return jwt.verify(token, process.env.NEXTAUTH_SECRET!, (err, decoded) => {
-    if (err) return false;
-    // return decoded;
-    return true;
-  });
-}
-
-export async function checkSession() {
-  const session = await auth();
-  if (!session) throw new Error('No session found');
-  if (session.user.role === 'user') throw new Error('Unauthorized');
-
-  return session;
-}
+//   return jwt.verify(token, process.env.NEXTAUTH_SECRET!, (err, decoded) => {
+//     if (err) return false;
+//     // return decoded;
+//     return true;
+//   });
+// }
 
 export function createAccessToken(userId: string) {
   return jwt.sign({ user: { id: userId } }, process.env.NEXTAUTH_SECRET!, {
@@ -72,5 +66,25 @@ export function checkEmailToken(token: string) {
     return jwt.verify(token, process.env.EMAIL_SECRET!);
   } catch (error) {
     return getErrorMessage(error);
+  }
+}
+
+export async function checkSession(): Promise<Session> {
+  const session = await auth();
+
+  if (!session) notFound();
+
+  return session;
+}
+
+export function getInitials(name?: string) {
+  if (!name || name.length === 0) return 'CN';
+
+  const splitName = name.split(' ');
+
+  if (splitName.length === 1) {
+    return splitName[0].slice(0, 2).toUpperCase();
+  } else {
+    return (splitName[0][0] + splitName[1][0]).toUpperCase();
   }
 }
