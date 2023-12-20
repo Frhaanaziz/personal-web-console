@@ -39,7 +39,7 @@ const NavList = ({ pathName }: { pathName: string }) => {
                 item.href === pathName
                   ? 'bg-muted text-muted-foreground'
                   : 'hover:text-muted-foreground hover:bg-muted',
-                'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-700'
+                'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
               )}
             >
               <item.icon
@@ -201,7 +201,7 @@ export default function Sidebar({
           </div>
         </ScrollArea>
 
-        <div className="flex items-center gap-x-4 px-4 py-4 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 mt-auto">
+        <div className="flex items-center gap-x-4 px-4 py-4 text-sm font-semibold leading-6 mt-auto">
           <Avatar>
             <AvatarImage src={user.image} />
             <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
