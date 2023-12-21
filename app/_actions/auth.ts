@@ -6,6 +6,7 @@ import {
   signUpSchema,
 } from '@/lib/validators/auth';
 import {
+  createAccessToken,
   createEmailToken,
   getErrorMessage,
   getZodErrorMessage,
@@ -144,7 +145,7 @@ export async function resetPasswordAction(
       },
       data: {
         hashedPassword,
-        emailVerified: new Date(),
+        emailVerified: true,
       },
     });
 
@@ -157,4 +158,28 @@ export async function resetPasswordAction(
 export async function deleteAllUsersAction() {
   const users = await prisma.user.deleteMany();
   return { data: users, error: null };
+}
+
+export async function googleLoginAction(input: any) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: input.data.email,
+      },
+    });
+
+    let accessToken;
+
+    if (!user) {
+      const user = await prisma.user.create(input);
+      accessToken = createAccessToken(user.id);
+
+      return { data: { accessToken, user }, error: null };
+    } else {
+      accessToken = createAccessToken(user.id);
+      return { data: { accessToken, user }, error: null };
+    }
+  } catch (error) {
+    return { error: getErrorMessage(error), data: null };
+  }
 }

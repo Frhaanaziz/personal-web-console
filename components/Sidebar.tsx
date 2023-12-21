@@ -108,8 +108,8 @@ export default function Sidebar({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathName = usePathname();
 
-  const user = session.user;
-
+  const user = session.data;
+  console.log(session);
   return (
     <>
       <Transition.Root show={sidebarOpen} as={Fragment}>
@@ -203,7 +203,12 @@ export default function Sidebar({
 
         <div className="flex items-center gap-x-4 px-4 py-4 text-sm font-semibold leading-6 mt-auto">
           <Avatar>
-            <AvatarImage src={user.image} />
+            <AvatarImage
+              src={user.image ?? undefined}
+              alt={user.name}
+              width={40}
+              height={40}
+            />
             <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
           </Avatar>
           <span className="sr-only">Your profile</span>

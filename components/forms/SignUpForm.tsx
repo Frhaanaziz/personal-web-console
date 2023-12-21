@@ -22,8 +22,11 @@ import { toast } from 'sonner';
 import { signUpAction } from '@/app/_actions/auth';
 import Image from 'next/image';
 import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 const SignUpForm = () => {
+  const router = useRouter();
+
   const defaultValues = {
     name: '',
     email: '',
@@ -46,6 +49,7 @@ const SignUpForm = () => {
 
       reset(defaultValues);
       toast.success('Please check your email to verify your account');
+      router.push('/auth/signin');
     } catch (error) {
       toast.error(getErrorMessage(error));
       console.error('SignUpForm', error);

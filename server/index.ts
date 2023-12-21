@@ -1,5 +1,8 @@
 import { z } from 'zod';
 import { publicProcedure, router } from '@/server/trpc';
+import prisma from '@/prisma/db';
+import jwt from 'jsonwebtoken';
+import { createAccessToken } from '@/lib/utils';
 
 export const appRouter = router({
   //   hello: publicProcedure
@@ -13,9 +16,6 @@ export const appRouter = router({
   //         greeting: `hello ${input.text}`,
   //       };
   //     }),
-  hello: publicProcedure.query(({ input }) => {
-    return 'Hello';
-  }),
 });
 // export type definition of API
 export type AppRouter = typeof appRouter;

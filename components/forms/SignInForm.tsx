@@ -136,7 +136,18 @@ const SignInForm = ({ callbackUrl }: Props) => {
       </div>
 
       <div className="mt-6">
-        <Button className={'gap-3 w-full'} onClick={() => signIn('google')}>
+        <Button
+          className={'gap-3 w-full'}
+          onClick={() =>
+            signIn('google', {
+              callbackUrl:
+                typeof callbackUrl === 'string'
+                  ? callbackUrl
+                  : process.env.NEXT_PUBLIC_BASE_URL!,
+              // redirect: false,
+            })
+          }
+        >
           <Image
             src="/icons/google.svg"
             width={20}

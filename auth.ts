@@ -5,14 +5,14 @@ import {
 } from 'next';
 import { NextAuthOptions, User, getServerSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { PrismaAdapter } from '@auth/prisma-adapter';
 import prisma from '@/prisma/db';
 import { comparePasswordAction } from './app/_actions';
-import { createAccessToken } from './lib/utils';
+import { createAccessToken, getErrorMessage } from './lib/utils';
 import Google from 'next-auth/providers/google';
+import { googleLoginAction } from './app/_actions/auth';
 
 export const authOptions = {
-  adapter: PrismaAdapter(prisma),
+  // adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     Google({
@@ -57,31 +57,59 @@ export const authOptions = {
           throw new Error('Incorrect email or password');
         }
 
-        // const accessToken = createAccessToken(user.id);
+        const accessToken = createAccessToken(user.id);
 
         // return { ...user, accessToken };
-        return user;
+        return { id: user.id, data: user, accessToken };
       },
     }),
   ],
   callbacks: {
-    // async signIn({ user, account, profile }) {
-    //   console.log('signIn callback', { user, account });
+    async signIn({ user, account, profile }) {
+      if (profile && account && account.provider === 'google') {
+        const input = {
+          data: {
+            name: profile.name,
+            email: profile.email,
+            emailVerified: profile.email_verified,
+            image: profile.picture,
+            accounts: {
+              create: {
+                type: account.type,
+                provider: account.provider,
+                providerAccountId: account.providerAccountId,
+                access_token: account.access_token,
+                expires_at: account.expires_at,
+                token_type: account.token_type,
+                scope: account.scope,
+                id_token: account.id_token,
+              },
+            },
+          },
+        };
 
-    //   if (account && account.provider === 'google') {
-    //     const accessToken = createAccessToken(user.id);
-    //     user.accessToken = accessToken;
-    //   }
-    //   return true;
-    // },
+        try {
+          const { error, data } = await googleLoginAction(input);
+          if (error) throw new Error(error);
+          if (!data) throw new Error('No data returned');
+
+          user.id = data.user.id;
+          user.accessToken = data.accessToken;
+          user.data = data.user;
+        } catch (error) {
+          console.error('Error signing in with Google', getErrorMessage(error));
+          return false;
+        }
+      }
+      return true;
+    },
 
     async jwt({ token, user, trigger, account, profile }) {
       if (user) {
         return {
           ...token,
-          id: user.id,
-          role: user.role,
-          // accessToken: user.accessToken,
+          data: user.data,
+          accessToken: user.accessToken,
         };
       }
       return token;
@@ -89,12 +117,8 @@ export const authOptions = {
     async session({ session, token }) {
       return {
         ...session,
-        // accessToken: token.accessToken,
-        user: {
-          id: token.id,
-          ...session.user,
-          role: token.role,
-        },
+        accessToken: token.accessToken,
+        data: token.data,
       };
     },
   },
@@ -105,6 +129,7 @@ export const authOptions = {
   },
   session: {
     strategy: 'jwt',
+    maxAge: 1 * 60 * 60, // 1 hour
   },
 } satisfies NextAuthOptions;
 

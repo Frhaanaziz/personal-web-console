@@ -19,7 +19,7 @@ export async function GET(request: Request) {
         id: decoded.user.id,
       },
       data: {
-        emailVerified: new Date(),
+        emailVerified: true,
       },
     });
 
