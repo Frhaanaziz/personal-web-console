@@ -6,6 +6,7 @@ import { ThemeProvider } from '@/context/ThemeProvider';
 import NextTopLoader from 'nextjs-toploader';
 import ToastProvider from '@/context/ToastProvider';
 import { webPrimaryColor } from '@/lib/constant';
+import TrpcProvider from '@/context/TrpcProvider';
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -30,12 +31,14 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <ThemeProvider attribute="class" disableTransitionOnChange>
-          <ToastProvider>
-            <NextTopLoader color={webPrimaryColor} />
-            {children}
-          </ToastProvider>
-        </ThemeProvider>
+        <TrpcProvider>
+          <ThemeProvider attribute="class" disableTransitionOnChange>
+            <ToastProvider>
+              <NextTopLoader color={webPrimaryColor} />
+              {children}
+            </ToastProvider>
+          </ThemeProvider>
+        </TrpcProvider>
       </body>
     </html>
   );
