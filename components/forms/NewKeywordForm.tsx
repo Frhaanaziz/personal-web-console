@@ -20,8 +20,10 @@ import { toast } from 'sonner';
 import { useId } from 'react';
 import { Loader2 } from 'lucide-react';
 import { newKeywordSchema } from '@/lib/validators/keyword';
-import { trpc } from '@/app/_trpc/client';
+import { api } from '@/trpc/react';
 import { useSession } from 'next-auth/react';
+import SubmitButton from '../SubmitButton';
+import { getErrorMessage } from '@/lib/utils';
 
 const NewKeywordForm = () => {
   const defaultValues = {
@@ -36,14 +38,13 @@ const NewKeywordForm = () => {
   });
   const { handleSubmit, control, reset } = form;
 
-  const { mutate, isLoading } = trpc.keyword.add.useMutation({
+  const { mutate, isLoading } = api.keyword.add.useMutation({
     onSuccess: () => {
       reset(defaultValues);
       toast.success('Keyword added');
     },
     onError: (error) => {
-      console.error('NewKeywordForm', error);
-      toast.error('Failed to add keyword');
+      toast.error(getErrorMessage(error));
     },
   });
 
@@ -53,7 +54,7 @@ const NewKeywordForm = () => {
         onSubmit={handleSubmit((formValues) => mutate(formValues))}
         className="space-y-8"
       >
-        <div className="flex gap-5">
+        <div className="flex gap-5 flex-wrap">
           <FormField
             control={control}
             name="keyword"
@@ -95,10 +96,7 @@ const NewKeywordForm = () => {
           />
         </div>
 
-        <Button type="submit" disabled={isLoading}>
-          {isLoading && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
-          Submit
-        </Button>
+        <SubmitButton isLoading={isLoading} />
       </form>
 
       {/* <Button className="mt-5" onClick={handleDeleteBatch}>Delete Batch</Button> */}

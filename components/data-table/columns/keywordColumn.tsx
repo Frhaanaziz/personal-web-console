@@ -29,8 +29,6 @@ import { formatDateWithTime } from '@/lib/utils';
 import { useId } from 'react';
 import { toast } from 'sonner';
 import Link from 'next/link';
-import { RouterOutput } from '@/types';
-import { serverClient } from '@/app/_trpc/serverClient';
 import { Keyword } from '@prisma/client';
 
 export const keywordColumns: ColumnDef<Keyword>[] = [

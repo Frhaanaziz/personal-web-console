@@ -5,20 +5,20 @@ import { Session } from 'next-auth';
 import { checkAccessToken, checkSession } from '@/lib/utils';
 import { db } from '../db';
 import { useSession } from 'next-auth/react';
+import superjson from 'superjson';
 
-// export const createTRPCContext = async (opts: { headers: Headers }) => {
-// export const createTRPCContext = async () => {
-//   const session = await auth();
+export const createTRPCContext = async (opts: { headers: Headers }) => {
+  const session = await auth();
 
-//   return {
-//     db,
-//     session,
-//   };
-// };
+  return {
+    db,
+    session,
+    ...opts,
+  };
+};
 
-// const t = initTRPC.context<typeof createTRPCContext>().create({
-const t = initTRPC.context().create({
-  // transformer: superjson,
+const t = initTRPC.context<typeof createTRPCContext>().create({
+  transformer: superjson,
   errorFormatter({ shape, error }) {
     return {
       ...shape,
@@ -31,14 +31,16 @@ const t = initTRPC.context().create({
   },
 });
 
-const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
-  console.log('enforceUserIsAuthed');
-  const session = (await auth()) as Session | null;
+const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
+  if (
+    !ctx.session ||
+    !ctx.session.user ||
+    !ctx.session.data ||
+    !ctx.session.accessToken
+  )
+    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Not authorized' });
 
-  if (!session || !session.user || !session.data || !session.accessToken)
-    throw new TRPCError({ code: 'UNAUTHORIZED' });
-
-  const isAunthenticated = checkAccessToken(session.accessToken);
+  const isAunthenticated = checkAccessToken(ctx.session.accessToken as string);
   if (!isAunthenticated)
     throw new TRPCError({
       code: 'UNAUTHORIZED',
@@ -49,10 +51,10 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
     ctx: {
       // infers the `session` as non-nullable
       session: {
-        ...session,
-        user: session.user,
-        data: session.data,
-        accessToken: session.accessToken,
+        ...ctx.session,
+        user: ctx.session.user,
+        data: ctx.session.data,
+        accessToken: ctx.session.accessToken,
       },
     },
   });
@@ -62,7 +64,7 @@ const enforceUserIsAdmin = t.middleware(async ({ ctx, next }) => {
   const session = (await auth()) as Session | null;
 
   if (session?.data?.role !== 'admin') {
-    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Admins only' });
+    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Not authorized' });
   }
 
   return next();

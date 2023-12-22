@@ -6,7 +6,8 @@ import { ThemeProvider } from '@/context/ThemeProvider';
 import NextTopLoader from 'nextjs-toploader';
 import ToastProvider from '@/context/ToastProvider';
 import { webPrimaryColor } from '@/lib/constant';
-import TRPCProvider from '@/context/TRPCProvider';
+import { cookies } from 'next/headers';
+import { TRPCReactProvider } from '@/trpc/react';
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -31,14 +32,14 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <TRPCProvider>
+        <TRPCReactProvider cookies={cookies().toString()}>
           <ThemeProvider attribute="class" disableTransitionOnChange>
             <ToastProvider>
               <NextTopLoader color={webPrimaryColor} />
               {children}
             </ToastProvider>
           </ThemeProvider>
-        </TRPCProvider>
+        </TRPCReactProvider>
       </body>
     </html>
   );

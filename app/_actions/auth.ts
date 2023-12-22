@@ -16,7 +16,7 @@ import { Resend } from 'resend';
 import EmailVerification from '@/email/EmailVerification';
 import { comparePasswordAction, hashPassword } from '.';
 import EmailVerificationResetPassword from '@/email/EmailVerificationResetPassword';
-import { serverClient } from '../_trpc/serverClient';
+import { api } from '@/trpc/server';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -156,7 +156,7 @@ export async function resetPasswordAction(
 
 export async function googleLoginAction(input: any) {
   try {
-    const data = await serverClient.auth.googleLogin(input);
+    const data = await api.auth.googleLogin.mutate(input);
 
     return { data, error: null };
   } catch (error) {

@@ -1,4 +1,4 @@
-import { serverClient } from '@/app/_trpc/serverClient';
+import { api } from '@/trpc/server';
 import HeadingWithAction from '@/components/HeadingWithAction';
 import { ControlledDataTable } from '@/components/data-table/ControlledDataTable';
 import { keywordColumns } from '@/components/data-table/columns/keywordColumn';
@@ -13,7 +13,7 @@ const ConfigKeywordsPage = async ({
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
   const page = searchParams.page || 1;
-  const keywords = await serverClient.keyword.getAll({ page: Number(page) });
+  const keywords = await api.keyword.getAll.query({ page: Number(page) });
   const { content, ...utils } = keywords;
 
   return (
