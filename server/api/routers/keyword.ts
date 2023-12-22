@@ -49,4 +49,21 @@ export const keyword = router({
         });
       }
     }),
+
+  delete: adminProcedure.input(z.string()).mutation(async ({ input, ctx }) => {
+    try {
+      await ctx.db.keyword.delete({
+        where: {
+          id: input,
+        },
+      });
+
+      return true;
+    } catch (error) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to delete keyword',
+      });
+    }
+  }),
 });

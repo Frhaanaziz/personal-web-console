@@ -24,12 +24,14 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 
-import { formatDateWithTime } from '@/lib/utils';
+import { formatDateWithTime, getErrorMessage } from '@/lib/utils';
 // import { deleteKeywordAction } from '@/app/_actions/config';
 import { useId } from 'react';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { Keyword } from '@prisma/client';
+import { api } from '@/trpc/react';
+import { useRouter } from 'next/navigation';
 
 export const keywordColumns: ColumnDef<Keyword>[] = [
   {
@@ -136,18 +138,22 @@ export const keywordColumns: ColumnDef<Keyword>[] = [
 
 function ActionCell({ row }: { row: Row<Keyword> }) {
   const id = useId();
+  const utils = api.useUtils();
+  const router = useRouter();
 
-  async function handleDeleteKeyword() {
-    try {
+  const { mutate } = api.keyword.delete.useMutation({
+    onMutate: () => {
       toast.loading('Deleting keyword...', { id });
-
-      // await deleteKeywordAction({ keyword_id: row.original.id });
-
+    },
+    onSuccess: () => {
       toast.success('Keyword deleted', { id });
-    } catch (error) {
-      toast.error('Failed to delete keyword', { id });
-    }
-  }
+      utils.keyword.getAll.invalidate();
+      router.refresh();
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error), { id });
+    },
+  });
 
   return (
     <AlertDialog>
@@ -185,7 +191,7 @@ function ActionCell({ row }: { row: Row<Keyword> }) {
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             className={buttonVariants({ variant: 'destructive' })}
-            onClick={handleDeleteKeyword}
+            onClick={() => mutate(row.original.id)}
           >
             Continue
           </AlertDialogAction>

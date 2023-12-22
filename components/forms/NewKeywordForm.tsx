@@ -38,10 +38,12 @@ const NewKeywordForm = () => {
   });
   const { handleSubmit, control, reset } = form;
 
+  const utils = api.useUtils();
   const { mutate, isLoading } = api.keyword.add.useMutation({
     onSuccess: () => {
       reset(defaultValues);
       toast.success('Keyword added');
+      utils.keyword.getAll.refetch();
     },
     onError: (error) => {
       toast.error(getErrorMessage(error));

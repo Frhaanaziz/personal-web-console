@@ -63,7 +63,7 @@ model Keyword {
 
 model Content {
   id        String   @id @default(cuid())
-  keyword   Keyword  @relation(fields: [keywordId], references: [id])
+  keyword   Keyword  @relation(fields: [keywordId], references: [id], onDelete: Cascade)
   keywordId String
   content   String
   locale    String
