@@ -24,6 +24,7 @@ const navigation = [
     children: [
       { name: 'Home', href: '/config/home' },
       { name: 'Case Study Project', href: '/config/csproject' },
+      { name: 'Keywords', href: '/config/keywords' },
     ],
   },
 ];
