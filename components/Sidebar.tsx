@@ -10,6 +10,7 @@ import { usePathname } from 'next/navigation';
 import { ModeToggle } from './ModeToggler';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Session } from 'next-auth';
+import Image from 'next/image';
 
 const navigation = [
   {
@@ -109,7 +110,6 @@ export default function Sidebar({
   const pathName = usePathname();
 
   const user = session.data;
-  console.log(session);
   return (
     <>
       <Transition.Root show={sidebarOpen} as={Fragment}>

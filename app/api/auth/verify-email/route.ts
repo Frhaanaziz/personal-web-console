@@ -1,7 +1,7 @@
 import { getErrorMessage } from '@/lib/utils';
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
-import prisma from '@/prisma/db';
+import {db} from '@/server/db';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -14,7 +14,7 @@ export async function GET(request: Request) {
       throw new Error('Invalid token, please request a new one.');
     }
 
-    await prisma.user.update({
+    await db.user.update({
       where: {
         id: decoded.user.id,
       },

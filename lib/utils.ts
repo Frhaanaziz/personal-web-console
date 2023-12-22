@@ -2,7 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
 import jwt from 'jsonwebtoken';
-import { auth } from '@/auth';
+import { auth } from '@/server/auth';
 import { notFound } from 'next/navigation';
 import { Session } from 'next-auth';
 
@@ -69,12 +69,12 @@ export function checkEmailToken(token: string) {
   }
 }
 
-export async function checkSession(): Promise<Session> {
+export async function checkSession() {
   const session = await auth();
 
   if (!session) notFound();
 
-  return session;
+  return session as Session;
 }
 
 export function getInitials(name?: string) {

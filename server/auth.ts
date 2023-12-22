@@ -5,11 +5,11 @@ import {
 } from 'next';
 import { NextAuthOptions, User, getServerSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import prisma from '@/prisma/db';
-import { comparePasswordAction } from './app/_actions';
-import { createAccessToken, getErrorMessage } from './lib/utils';
+import { db } from '@/server/db';
+import { comparePasswordAction } from '../app/_actions';
+import { createAccessToken, getErrorMessage } from '../lib/utils';
 import Google from 'next-auth/providers/google';
-import { googleLoginAction } from './app/_actions/auth';
+import { googleLoginAction } from '../app/_actions/auth';
 
 export const authOptions = {
   // adapter: PrismaAdapter(prisma),
@@ -33,7 +33,7 @@ export const authOptions = {
           throw new Error('Please enter an email and password');
         }
 
-        const user = await prisma.user.findUnique({
+        const user = await db.user.findUnique({
           where: {
             email: credentials.email,
           },

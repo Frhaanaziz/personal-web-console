@@ -1,5 +1,5 @@
 'use server';
-import prisma from '@/prisma/db';
+import { db } from '@/server/db';
 import {
   emailSchema,
   resetPasswordSchema,
@@ -16,6 +16,7 @@ import { Resend } from 'resend';
 import EmailVerification from '@/email/EmailVerification';
 import { comparePasswordAction, hashPassword } from '.';
 import EmailVerificationResetPassword from '@/email/EmailVerificationResetPassword';
+import { serverClient } from '../_trpc/serverClient';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -29,7 +30,7 @@ export async function signUpAction(rawData: z.infer<typeof signUpSchema>) {
   const { email, password, name } = zodResult.data;
 
   try {
-    const exist = await prisma.user.findUnique({
+    const exist = await db.user.findUnique({
       where: {
         email,
       },
@@ -48,7 +49,7 @@ export async function signUpAction(rawData: z.infer<typeof signUpSchema>) {
     if (!exist) {
       const hashedPassword = await hashPassword(password);
 
-      const user = await prisma.user.create({
+      const user = await db.user.create({
         data: {
           name,
           email,
@@ -58,7 +59,6 @@ export async function signUpAction(rawData: z.infer<typeof signUpSchema>) {
 
       const emailToken = createEmailToken(user.id);
 
-      // const result = await resend.emails.send({
       resend.emails.send({
         from: 'Portfolio <portfolio-console@aththariq.com>',
         to: [email],
@@ -71,7 +71,6 @@ export async function signUpAction(rawData: z.infer<typeof signUpSchema>) {
     } else if (!exist.emailVerified) {
       const emailToken = createEmailToken(exist.id);
 
-      // const result = await resend.emails.send({
       resend.emails.send({
         from: 'Portfolio <portfolio-console@aththariq.com>',
         to: [email],
@@ -101,7 +100,7 @@ export async function validateEmailOnResetPasswordAction(
   const { email } = zodResult.data;
 
   try {
-    const user = await prisma.user.findUnique({
+    const user = await db.user.findUnique({
       where: {
         email,
       },
@@ -139,7 +138,7 @@ export async function resetPasswordAction(
 
   try {
     const hashedPassword = await hashPassword(newPassword);
-    await prisma.user.update({
+    await db.user.update({
       where: {
         id: userId,
       },
@@ -155,30 +154,11 @@ export async function resetPasswordAction(
   }
 }
 
-export async function deleteAllUsersAction() {
-  const users = await prisma.user.deleteMany();
-  return { data: users, error: null };
-}
-
 export async function googleLoginAction(input: any) {
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        email: input.data.email,
-      },
-    });
+    const data = await serverClient.auth.googleLogin(input);
 
-    let accessToken;
-
-    if (!user) {
-      const user = await prisma.user.create(input);
-      accessToken = createAccessToken(user.id);
-
-      return { data: { accessToken, user }, error: null };
-    } else {
-      accessToken = createAccessToken(user.id);
-      return { data: { accessToken, user }, error: null };
-    }
+    return { data, error: null };
   } catch (error) {
     return { error: getErrorMessage(error), data: null };
   }
