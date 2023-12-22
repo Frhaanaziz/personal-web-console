@@ -2,8 +2,21 @@ import { auth } from '@/server/auth';
 import { TRPCError, initTRPC } from '@trpc/server';
 import { ZodError } from 'zod';
 import { Session } from 'next-auth';
-import { checkAccessToken } from '@/lib/utils';
+import { checkAccessToken, checkSession } from '@/lib/utils';
+import { db } from '../db';
+import { useSession } from 'next-auth/react';
 
+// export const createTRPCContext = async (opts: { headers: Headers }) => {
+// export const createTRPCContext = async () => {
+//   const session = await auth();
+
+//   return {
+//     db,
+//     session,
+//   };
+// };
+
+// const t = initTRPC.context<typeof createTRPCContext>().create({
 const t = initTRPC.context().create({
   // transformer: superjson,
   errorFormatter({ shape, error }) {
@@ -19,6 +32,7 @@ const t = initTRPC.context().create({
 });
 
 const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
+  console.log('enforceUserIsAuthed');
   const session = (await auth()) as Session | null;
 
   if (!session || !session.user || !session.data || !session.accessToken)

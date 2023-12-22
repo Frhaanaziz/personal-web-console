@@ -1,5 +1,6 @@
 import { appRouter } from '@/server/api/root';
 import { httpBatchLink } from '@trpc/client';
+import { headers } from 'next/headers';
 
 export const serverClient = appRouter.createCaller({
   links: [
@@ -8,3 +9,5 @@ export const serverClient = appRouter.createCaller({
     }),
   ],
 });
+// export const serverClient = async () =>
+//   appRouter.createCaller(await createTRPCContext());

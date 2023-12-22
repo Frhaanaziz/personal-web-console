@@ -113,14 +113,19 @@ export const getPaginatedResult = async (page: number, table: string) => {
   const savePage = page < 1 ? 1 : page;
   const rowsPerPage = PER_PAGE;
   const totalPages = Math.ceil(totalRow / rowsPerPage);
+  let rows = [];
 
-  // @ts-ignore
-  const rows = await db[table].findMany({
-    skip: (savePage - 1) * rowsPerPage,
-    take: rowsPerPage,
-  });
-
-  console.log(savePage, page);
+  try {
+    // @ts-ignore
+    rows = await db[table].findMany({
+      skip: (savePage - 1) * rowsPerPage,
+      take: rowsPerPage,
+    });
+  } catch (error) {
+    console.error(`Error fetching rows from table ${table}: `, error);
+    // Return an empty array if there's an error
+    rows = [];
+  }
 
   return {
     currentPage: page,

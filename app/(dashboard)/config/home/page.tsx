@@ -11,7 +11,7 @@ const HomeConfigPage = async ({
   // try {
   //   const { data, error } = await getSectionDataAction({
   //     locale,
-  //     identifier: 'home',
+  //     group: 'home',
   //   });
   //   if (error) throw new Error(error);
 

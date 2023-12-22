@@ -71,7 +71,7 @@ export const keywordColumns: ColumnDef<Keyword>[] = [
     cell: ({ row }) => <div className="pl-3">{row.getValue('keyword')}</div>,
   },
   {
-    accessorKey: 'identifier',
+    accessorKey: 'group',
     header: ({ column }) => {
       return (
         <Button
@@ -80,12 +80,12 @@ export const keywordColumns: ColumnDef<Keyword>[] = [
           size="sm"
           className="text-md"
         >
-          Identifier
+          Group
           <ChevronsUpDown className="ml-2 h-3 w-3" />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="pl-3">{row.getValue('identifier')}</div>,
+    cell: ({ row }) => <div className="pl-3">{row.getValue('group')}</div>,
   },
   {
     accessorKey: 'createdAt',
