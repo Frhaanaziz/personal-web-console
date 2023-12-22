@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 import { trpc } from '@/app/_trpc/client';
 
-export default function TrpcProvider({
+export default function TRPCProvider({
   children,
 }: {
   children: React.ReactNode;

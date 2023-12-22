@@ -71,7 +71,7 @@ const NavList = ({ pathName }: { pathName: string }) => {
                       aria-hidden="true"
                     />
                   </Disclosure.Button>
-                  <Disclosure.Panel as="ul" className="mt-1 px-2">
+                  <Disclosure.Panel as="ul" className="mt-1 px-2 space-y-1">
                     {item.children.map((subItem) => (
                       <li key={subItem.name}>
                         <Disclosure.Button

@@ -5,21 +5,21 @@ const HomeConfigPage = async ({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
-  //   let message: HomeConfigData | null = null;
-  //   const locale = (searchParams.locale as string) || 'en';
+  // let message: HomeConfigData | null = null;
+  // const locale = (searchParams.locale as string) || 'en';
 
-  //   try {
-  //     const { data, error } = await getSectionDataAction({
-  //       locale,
-  //       identifier: 'home',
-  //     });
-  //     if (error) throw new Error(error);
+  // try {
+  //   const { data, error } = await getSectionDataAction({
+  //     locale,
+  //     identifier: 'home',
+  //   });
+  //   if (error) throw new Error(error);
 
-  //     message = convertToLocaleMessage(data);
-  //   } catch (error) {
-  //     console.error('HomeConfigPage', error);
-  //   }
-  //   if (!message) throw new Error('Home config data not found');
+  //   message = convertToLocaleMessage(data);
+  // } catch (error) {
+  //   console.error('HomeConfigPage', error);
+  // }
+  // if (!message) throw new Error('Home config data not found');
 
   return (
     <>
