@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { router, protectedProcedure, publicProcedure } from '@/server/api/trpc';
+import { router, privateProcedure, publicProcedure } from '@/server/api/trpc';
 import { db } from '@/server/db';
 import { createAccessToken, getErrorMessage } from '@/lib/utils';
 import { TRPCError } from '@trpc/server';

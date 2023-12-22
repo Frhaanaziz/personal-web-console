@@ -1,6 +1,5 @@
 import { auth } from '@/server/auth';
 import { TRPCError, initTRPC } from '@trpc/server';
-import { db } from '../db';
 import { ZodError } from 'zod';
 import { Session } from 'next-auth';
 
@@ -49,7 +48,7 @@ const enforceUserIsAdmin = t.middleware(async ({ ctx, next }) => {
 });
 
 export const publicProcedure = t.procedure;
-export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+export const privateProcedure = t.procedure.use(enforceUserIsAuthed);
 export const adminProcedure = t.procedure
   .use(enforceUserIsAuthed)
   .use(enforceUserIsAdmin);
