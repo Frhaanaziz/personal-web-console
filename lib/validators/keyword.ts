@@ -5,3 +5,9 @@ export const newKeywordSchema = z.object({
   group: z.string().min(1),
   content: z.string().min(1),
 });
+
+export const updateKeywordSchema = z.object({
+  id: z.string().cuid(),
+  keyword: z.string().min(1),
+  group: z.string().min(1),
+});
