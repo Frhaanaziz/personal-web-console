@@ -52,14 +52,13 @@ model User {
   accounts       Account[]
 }
 
-// create keyword model for static localize content
 model Keyword {
-  id         String    @id @default(cuid())
-  keyword    String
-  identifier String
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  Content    Content[]
+  id        String    @id @default(cuid())
+  keyword   String
+  group     String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Content   Content[]
 }
 
 model Content {
