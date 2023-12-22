@@ -36,6 +36,7 @@ model Account {
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId]) // manual
 }
 
 model User {
@@ -49,24 +50,26 @@ model User {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   accounts       Account[]
-  // sessions       Session[]
 }
 
-// model Session {
-//   id           String   @id @default(cuid())
-//   sessionToken String   @unique
-//   userId       String
-//   expires      DateTime
-//   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-// }
+// create keyword model for static localize content
+model Keyword {
+  id         String    @id @default(cuid())
+  keyword    String
+  identifier String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  Content    Content[]
+}
 
-// model VerificationRequest {
-//   id         String   @id @default(cuid())
-//   identifier String
-//   token      String   @unique
-//   expires    DateTime
-//   createdAt  DateTime @default(now())
-//   updatedAt  DateTime @updatedAt
+model Content {
+  id        String   @id @default(cuid())
+  keyword   Keyword  @relation(fields: [keywordId], references: [id])
+  keywordId String
+  content   String
+  locale    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-//   @@unique([identifier, token])
-// }
+  @@unique([keywordId, locale])
+}
