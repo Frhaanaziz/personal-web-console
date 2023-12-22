@@ -2,6 +2,7 @@ import { auth } from '@/server/auth';
 import { TRPCError, initTRPC } from '@trpc/server';
 import { ZodError } from 'zod';
 import { Session } from 'next-auth';
+import { checkAccessToken } from '@/lib/utils';
 
 const t = initTRPC.context().create({
   // transformer: superjson,
@@ -18,11 +19,17 @@ const t = initTRPC.context().create({
 });
 
 const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
-  const session = await auth();
+  const session = (await auth()) as Session | null;
 
-  if (!session || !session.user || !session.data || !session.accessToken) {
+  if (!session || !session.user || !session.data || !session.accessToken)
     throw new TRPCError({ code: 'UNAUTHORIZED' });
-  }
+
+  const isAunthenticated = checkAccessToken(session.accessToken);
+  if (!isAunthenticated)
+    throw new TRPCError({
+      code: 'UNAUTHORIZED',
+      message: 'Invalid access token',
+    });
 
   return next({
     ctx: {

@@ -38,18 +38,33 @@ export function getZodErrorMessage(result: z.SafeParseError<any>) {
   return errorMessage;
 }
 
-// export async function checkToken() {
-//   const session = await auth();
-//   if (!session) return false;
+export function formatDateWithTime(date: Date | string | number | null) {
+  if (!date) return '';
 
-//   const token = session.accessToken as string;
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+  }).format(new Date(date));
+}
 
-//   return jwt.verify(token, process.env.NEXTAUTH_SECRET!, (err, decoded) => {
-//     if (err) return false;
-//     // return decoded;
-//     return true;
-//   });
-// }
+export function checkAccessToken(token: string) {
+  // const session = await auth();
+  // if (!session) return false;
+
+  // const token = session.accessToken as string;
+  try {
+    const jwtPayload = jwt.verify(token, process.env.NEXTAUTH_SECRET!);
+
+    // return jwtPayload;
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
 
 export function createAccessToken(userId: string) {
   return jwt.sign({ user: { id: userId } }, process.env.NEXTAUTH_SECRET!, {
@@ -95,14 +110,17 @@ export const getPaginatedResult = async (page: number, table: string) => {
   // @ts-ignore
   const totalRow = await db[table].count();
 
+  const savePage = page < 1 ? 1 : page;
   const rowsPerPage = PER_PAGE;
   const totalPages = Math.ceil(totalRow / rowsPerPage);
 
   // @ts-ignore
   const rows = await db[table].findMany({
-    skip: (page - 1) * rowsPerPage,
+    skip: (savePage - 1) * rowsPerPage,
     take: rowsPerPage,
   });
+
+  console.log(savePage, page);
 
   return {
     currentPage: page,

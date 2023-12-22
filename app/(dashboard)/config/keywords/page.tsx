@@ -1,5 +1,7 @@
 import { serverClient } from '@/app/_trpc/serverClient';
 import HeadingWithAction from '@/components/HeadingWithAction';
+import { ControlledDataTable } from '@/components/data-table/ControlledDataTable';
+import { keywordColumns } from '@/components/data-table/columns/keywordColumn';
 // import ConfigKeywordsTableSection from '@/components/section/ConfigKeywordsTableSection';
 // import { getAxios } from '@/lib/axios_config';
 // import { checkSession } from '@/lib/utils';
@@ -12,7 +14,8 @@ const ConfigKeywordsPage = async ({
 }) => {
   const page = searchParams.page || 1;
   const keywords = await serverClient.keyword.getAll({ page: Number(page) });
-  console.log(keywords);
+  const { content, ...utils } = keywords;
+
   return (
     <>
       <HeadingWithAction
@@ -21,7 +24,11 @@ const ConfigKeywordsPage = async ({
         href="/config/keywords/new"
       />
 
-      {/* <ConfigKeywordsTableSection data={data} /> */}
+      <ControlledDataTable
+        data={content}
+        utils={utils}
+        columns={keywordColumns}
+      />
     </>
   );
 };

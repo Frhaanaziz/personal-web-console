@@ -6,7 +6,7 @@ import { TRPCError } from '@trpc/server';
 
 export const keyword = router({
   getAll: privateProcedure
-    .input(z.object({ page: z.coerce.number().min(1) }))
+    .input(z.object({ page: z.coerce.number() }))
     .query(async ({ input }) => {
       try {
         return await getPaginatedResult(input.page, 'keyword');
