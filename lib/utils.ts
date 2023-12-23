@@ -136,6 +136,17 @@ export const getPaginatedResult = async (page: number, table: string) => {
   };
 };
 
+export function generateConfigDefaultValues(
+  message: Record<string, { id: string; content: string }>
+): Partial<Record<string, string>> {
+  const defaultValues: Partial<Record<string, string>> = {};
+  Object.keys(message).forEach((key) => {
+    const value = message[key];
+    defaultValues[key] = value.content;
+  });
+  return defaultValues;
+}
+
 export const array1 = Array.from({ length: 1 }, (_, i: number) => i + 1);
 export const array2 = Array.from({ length: 2 }, (_, i: number) => i + 1);
 export const array3 = Array.from({ length: 3 }, (_, i: number) => i + 1);

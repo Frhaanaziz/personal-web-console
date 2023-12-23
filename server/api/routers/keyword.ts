@@ -61,7 +61,7 @@ export const keyword = router({
         const message = keywords.reduce((acc, item) => {
           const { keyword, Content, id } = item;
           if (Content[0]) {
-            acc[keyword] = { id, content: Content[0].content };
+            acc[keyword] = { id: Content[0].id, content: Content[0].content };
           }
           return acc;
         }, {} as Record<string, { id: string; content: string }>);

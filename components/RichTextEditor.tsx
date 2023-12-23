@@ -12,12 +12,12 @@ import TiptapToolbar from './TiptapToolbar';
 const RichTextEditor = ({
   value,
   onChange,
-  isSubmitting,
+  isLoading,
   formState,
 }: {
   value: string;
   onChange: (richText: string) => void;
-  isSubmitting: boolean;
+  isLoading: boolean;
   formState?: any;
 }) => {
   const editor = useEditor({
@@ -75,11 +75,11 @@ const RichTextEditor = ({
     <>
       <div
         className={`flex flex-col justify-strech ${
-          isSubmitting ? 'pointer-events-none opacity-50' : ''
+          isLoading ? 'pointer-events-none opacity-50' : ''
         }`}
       >
         <TiptapToolbar editor={editor} />
-        <EditorContent editor={editor} disabled={isSubmitting} />
+        <EditorContent editor={editor} disabled={isLoading} />
       </div>
     </>
   );
