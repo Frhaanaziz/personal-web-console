@@ -1,34 +1,51 @@
 import { z } from 'zod';
 
+const configSchema = z
+  .string()
+  .min(1, { message: 'Input must be at least 1 character long.' });
+
 export const homeConfigSchema = z.object({
-  heroHeading: z.string().min(1),
-  heroDescription: z.string().min(1),
-  heroLinkLabel: z.string().min(1),
-  heroLinkHref: z.string().min(1),
+  heroHeading: configSchema,
+  heroDescription: configSchema,
+  heroLinkLabel: configSchema,
+  heroLinkHref: configSchema,
 
-  aboutHeading: z.string().min(1),
-  aboutSubHeading: z.string().min(1),
-  aboutDescriptionHeading: z.string().min(1),
-  aboutDescription: z.string().min(1),
-  aboutLinkLabel: z.string().min(1),
-  aboutLinkHref: z.string().min(1),
-  aboutSkillsHeading: z.string().min(1),
+  aboutHeading: configSchema,
+  aboutSubHeading: configSchema,
+  aboutDescriptionHeading: configSchema,
+  aboutDescription: configSchema,
+  aboutLinkLabel: configSchema,
+  aboutLinkHref: configSchema,
+  aboutSkillsHeading: configSchema,
 
-  projectsHeading: z.string().min(1),
-  projectsSubHeading: z.string().min(1),
-  projects1ImageSource: z.string().min(1),
-  projects1Heading: z.string().min(1),
-  projects1Description: z.string().min(1),
-  projects1CSLink: z.string().min(1),
-  projects1CSLabel: z.string().min(1),
+  projectsHeading: configSchema,
+  projectsSubHeading: configSchema,
+  projects1ImageSource: configSchema,
+  projects1Heading: configSchema,
+  projects1Description: configSchema,
+  projects1CSLink: configSchema,
+  projects1CSLabel: configSchema,
 
-  contactHeading: z.string().min(1),
-  contactSubHeading: z.string().min(1),
-  contactFormField1Label: z.string().min(1),
-  contactFormField1Placeholder: z.string().min(1),
-  contactFormField2Label: z.string().min(1),
-  contactFormField2Placeholder: z.string().min(1),
-  contactFormField3Label: z.string().min(1),
-  contactFormField3Placeholder: z.string().min(1),
-  contactFormSubmitButtonLabel: z.string().min(1),
+  contactHeading: configSchema,
+  contactSubHeading: configSchema,
+  contactFormField1Label: configSchema,
+  contactFormField1Placeholder: configSchema,
+  contactFormField2Label: configSchema,
+  contactFormField2Placeholder: configSchema,
+  contactFormField3Label: configSchema,
+  contactFormField3Placeholder: configSchema,
+  contactFormSubmitButtonLabel: configSchema,
+});
+
+export const layoutConfigSchema = z.object({
+  headingNav1Label: configSchema,
+  headingNav1Href: configSchema,
+  headingNav2Label: configSchema,
+  headingNav2Href: configSchema,
+  headingNav3Label: configSchema,
+  headingNav3Href: configSchema,
+  headingNav4Label: configSchema,
+  headingNav4Href: configSchema,
+
+  footerText: configSchema,
 });
