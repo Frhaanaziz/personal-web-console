@@ -1,8 +1,9 @@
 import HeadingNoAction from '@/components/HeadingNoAction';
+import CSProjectConfigForm from '@/components/forms/CSProjectConfigForm';
 import LayoutConfigForm from '@/components/forms/LayoutConfigForm';
 import { api } from '@/trpc/server';
 
-const LayoutConfigPage = async ({
+const CSProjectPage = async ({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -10,16 +11,16 @@ const LayoutConfigPage = async ({
   const locale = (searchParams.locale as string) || 'en';
   const message = await api.keyword.getByGroupAndLocale.query({
     locale,
-    group: 'layout',
+    group: 'CSProject',
   });
 
   return (
     <>
-      <HeadingNoAction text="Layout Config" />
+      <HeadingNoAction text="Case Study Project Config" />
 
-      <LayoutConfigForm message={message} locale={locale} />
+      <CSProjectConfigForm message={message} locale={locale} />
     </>
   );
 };
 
-export default LayoutConfigPage;
+export default CSProjectPage;

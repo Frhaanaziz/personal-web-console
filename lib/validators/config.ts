@@ -49,3 +49,22 @@ export const layoutConfigSchema = z.object({
 
   footerText: configSchema,
 });
+
+export const CSProjectConfigSchema = z.object({
+  mainDescription: configSchema,
+  projectLinkLabel: configSchema,
+  overviewHeading: configSchema,
+  toolsHeading: configSchema,
+  backHeading: configSchema,
+  liveHeading: configSchema,
+
+  thriftshopLink: configSchema,
+  thriftshopOverviewDescription: configSchema,
+  thriftshopToolsCount: configSchema,
+  thriftshopTools1: configSchema,
+  thriftshopTools2: configSchema,
+  thriftshopTools3: configSchema,
+  thriftshopTools4: configSchema,
+  thriftshopTools5: configSchema,
+  thriftshopTools6: configSchema,
+});

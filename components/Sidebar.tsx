@@ -23,7 +23,7 @@ const navigation = [
     icon: Settings2Icon,
     children: [
       { name: 'Home', href: '/config/home' },
-      { name: 'Case Study Project', href: '/config/csproject' },
+      { name: 'Case Study Project', href: '/config/cs-project' },
       { name: 'Layout', href: '/config/layout' },
       { name: 'Keywords', href: '/config/keywords' },
     ],

@@ -7,3 +7,5 @@ export const languageOptions = [
   { name: 'Indonesia', value: 'id' },
   { name: 'Japanese', value: 'ja' },
 ];
+
+export const projects = ['thriftshop'];
