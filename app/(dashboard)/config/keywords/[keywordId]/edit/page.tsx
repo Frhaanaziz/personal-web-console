@@ -1,5 +1,4 @@
-// import UpdateKeywordForm from '@/components/forms/UpdateKeywordForm';
-import FormWrapper from '@/components/FormWrapper';
+import FormShell from '@/components/shell/FormShell';
 import HeadingWithAction from '@/components/HeadingWithAction';
 import EditKeywordForm from '@/components/forms/EditKeywordForm';
 import { api } from '@/trpc/server';
@@ -19,9 +18,9 @@ const EditKeywordPage = async ({
         href="/config/keywords"
       />
 
-      <FormWrapper>
+      <FormShell>
         <EditKeywordForm keyword={keyword} />
-      </FormWrapper>
+      </FormShell>
     </>
   );
 };

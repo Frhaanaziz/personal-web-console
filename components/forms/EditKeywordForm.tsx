@@ -20,6 +20,7 @@ import { updateKeywordSchema } from '@/lib/validators/keyword';
 import { api } from '@/trpc/react';
 import { getErrorMessage } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import FormFieldShell from '../shell/FormFieldShell';
 
 const EditKeywordForm = ({ keyword: data }: { keyword: Keyword }) => {
   const { keyword, group, id } = data;
@@ -56,7 +57,7 @@ const EditKeywordForm = ({ keyword: data }: { keyword: Keyword }) => {
         onSubmit={handleSubmit((formValues) => mutate(formValues))}
         className="space-y-8"
       >
-        <div className="flex gap-5">
+        <FormFieldShell>
           <FormField
             control={control}
             name="keyword"
@@ -83,7 +84,7 @@ const EditKeywordForm = ({ keyword: data }: { keyword: Keyword }) => {
               </FormItem>
             )}
           />
-        </div>
+        </FormFieldShell>
 
         <SubmitButton isLoading={isLoading} />
       </form>

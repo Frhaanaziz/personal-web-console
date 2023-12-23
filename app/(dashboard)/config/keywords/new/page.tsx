@@ -1,5 +1,5 @@
 import NewKeywordForm from '@/components/forms/NewKeywordForm';
-import FormWrapper from '@/components/FormWrapper';
+import FormShell from '@/components/shell/FormShell';
 import HeadingWithAction from '@/components/HeadingWithAction';
 
 const NewKeywordPage = () => {
@@ -11,9 +11,9 @@ const NewKeywordPage = () => {
         href="/config/keywords"
       />
 
-      <FormWrapper>
+      <FormShell>
         <NewKeywordForm />
-      </FormWrapper>
+      </FormShell>
     </>
   );
 };

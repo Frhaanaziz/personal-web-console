@@ -135,3 +135,10 @@ export const getPaginatedResult = async (page: number, table: string) => {
     content: rows,
   };
 };
+
+export const array1 = Array.from({ length: 1 }, (_, i: number) => i + 1);
+export const array2 = Array.from({ length: 2 }, (_, i: number) => i + 1);
+export const array3 = Array.from({ length: 3 }, (_, i: number) => i + 1);
+export const array4 = Array.from({ length: 4 }, (_, i: number) => i + 1);
+export const array5 = Array.from({ length: 5 }, (_, i: number) => i + 1);
+export const array6 = Array.from({ length: 6 }, (_, i: number) => i + 1);

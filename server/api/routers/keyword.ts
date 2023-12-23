@@ -41,15 +41,32 @@ export const keyword = router({
     }
   }),
 
-  getByGroup: privateProcedure
-    .input(z.string())
+  getByGroupAndLocale: privateProcedure
+    .input(z.object({ group: z.string(), locale: z.string() }))
     .query(async ({ input, ctx }) => {
       try {
-        return await ctx.db.keyword.findMany({
+        const keywords = await ctx.db.keyword.findMany({
           where: {
-            group: input,
+            group: input.group,
+          },
+          include: {
+            Content: {
+              where: {
+                locale: input.locale,
+              },
+            },
           },
         });
+
+        const message = keywords.reduce((acc, item) => {
+          const { keyword, Content, id } = item;
+          if (Content[0]) {
+            acc[keyword] = { id, content: Content[0].content };
+          }
+          return acc;
+        }, {} as Record<string, { id: string; content: string }>);
+
+        return message;
       } catch (error) {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',

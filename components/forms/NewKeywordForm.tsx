@@ -24,6 +24,7 @@ import { api } from '@/trpc/react';
 import { useSession } from 'next-auth/react';
 import SubmitButton from '../SubmitButton';
 import { getErrorMessage } from '@/lib/utils';
+import FormFieldShell from '../shell/FormFieldShell';
 
 const NewKeywordForm = () => {
   const defaultValues = {
@@ -56,7 +57,7 @@ const NewKeywordForm = () => {
         onSubmit={handleSubmit((formValues) => mutate(formValues))}
         className="space-y-8"
       >
-        <div className="flex gap-5 flex-wrap">
+        <FormFieldShell>
           <FormField
             control={control}
             name="keyword"
@@ -96,7 +97,7 @@ const NewKeywordForm = () => {
               </FormItem>
             )}
           />
-        </div>
+        </FormFieldShell>
 
         <SubmitButton isLoading={isLoading} />
       </form>

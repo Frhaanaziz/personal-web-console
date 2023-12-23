@@ -1,31 +1,25 @@
 import HeadingNoAction from '@/components/HeadingNoAction';
+import HomeConfigForm from '@/components/forms/HomeConfigForm';
+import { api } from '@/trpc/server';
+import { z } from 'zod';
 
 const HomeConfigPage = async ({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
-  // let message: HomeConfigData | null = null;
-  // const locale = (searchParams.locale as string) || 'en';
-
-  // try {
-  //   const { data, error } = await getSectionDataAction({
-  //     locale,
-  //     group: 'home',
-  //   });
-  //   if (error) throw new Error(error);
-
-  //   message = convertToLocaleMessage(data);
-  // } catch (error) {
-  //   console.error('HomeConfigPage', error);
-  // }
-  // if (!message) throw new Error('Home config data not found');
+  const locale = (searchParams.locale as string) || 'en';
+  const message = await api.keyword.getByGroupAndLocale.query({
+    locale,
+    group: 'home',
+  });
+  console.log(message);
 
   return (
     <>
       <HeadingNoAction text="Home Config" />
 
-      {/* <HomeConfigForm message={message} /> */}
+      <HomeConfigForm message={message} locale={locale} />
     </>
   );
 };
