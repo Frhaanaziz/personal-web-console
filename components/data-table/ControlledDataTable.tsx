@@ -105,8 +105,8 @@ export function ControlledDataTable({
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     manualPagination: true,
-    pageCount: totalPages,
-    // pageCount: totalPages + 1,
+    // pageCount: totalPages,
+    pageCount: totalPages + 1,
     // pageCount: -1,
     onPaginationChange: setPagination,
     state: {

@@ -1,10 +1,8 @@
 // import UpdateKeywordForm from '@/components/forms/UpdateKeywordForm';
+import FormWrapper from '@/components/FormWrapper';
 import HeadingWithAction from '@/components/HeadingWithAction';
 import EditKeywordForm from '@/components/forms/EditKeywordForm';
-import { checkSession } from '@/lib/utils';
 import { api } from '@/trpc/server';
-import { Keyword } from '@prisma/client';
-import { notFound } from 'next/navigation';
 
 const EditKeywordPage = async ({
   params: { keywordId },
@@ -21,9 +19,9 @@ const EditKeywordPage = async ({
         href="/config/keywords"
       />
 
-      <section className="border rounded-xl p-6 w-fit">
+      <FormWrapper>
         <EditKeywordForm keyword={keyword} />
-      </section>
+      </FormWrapper>
     </>
   );
 };

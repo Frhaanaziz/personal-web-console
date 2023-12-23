@@ -28,7 +28,7 @@ import { getErrorMessage } from '@/lib/utils';
 const NewKeywordForm = () => {
   const defaultValues = {
     keyword: '',
-    group: '',
+    group: 'home',
     content: '',
   };
 

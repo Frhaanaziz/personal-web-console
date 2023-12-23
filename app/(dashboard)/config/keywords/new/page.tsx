@@ -1,4 +1,5 @@
 import NewKeywordForm from '@/components/forms/NewKeywordForm';
+import FormWrapper from '@/components/FormWrapper';
 import HeadingWithAction from '@/components/HeadingWithAction';
 
 const NewKeywordPage = () => {
@@ -10,9 +11,9 @@ const NewKeywordPage = () => {
         href="/config/keywords"
       />
 
-      <section className="border rounded-xl p-6 max-w-fit">
+      <FormWrapper>
         <NewKeywordForm />
-      </section>
+      </FormWrapper>
     </>
   );
 };

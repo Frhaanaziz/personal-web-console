@@ -15,7 +15,6 @@ export const keyword = router({
       try {
         return await getPaginatedResult(input.page, 'keyword');
       } catch (error) {
-        // throw error;
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to get keywords',
@@ -42,9 +41,27 @@ export const keyword = router({
     }
   }),
 
+  getByGroup: privateProcedure
+    .input(z.string())
+    .query(async ({ input, ctx }) => {
+      try {
+        return await ctx.db.keyword.findMany({
+          where: {
+            group: input,
+          },
+        });
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: `Failed to get keywords by group ${input}`,
+        });
+      }
+    }),
+
   add: adminProcedure
     .input(newKeywordSchema)
     .mutation(async ({ input, ctx }) => {
+      //   for (const [key, value] of Object.entries(inputObj)) {
       try {
         // Create keyword
         const keyword = await ctx.db.keyword.create({
