@@ -1,7 +1,6 @@
 import HeadingNoAction from '@/components/HeadingNoAction';
 import HomeConfigForm from '@/components/forms/HomeConfigForm';
 import { api } from '@/trpc/server';
-import { z } from 'zod';
 
 const HomeConfigPage = async ({
   searchParams,
@@ -13,7 +12,6 @@ const HomeConfigPage = async ({
     locale,
     group: 'home',
   });
-  console.log(message);
 
   return (
     <>
