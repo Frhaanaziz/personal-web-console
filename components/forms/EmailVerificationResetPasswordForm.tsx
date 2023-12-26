@@ -46,7 +46,6 @@ const EmailVerificationResetPasswordForm = () => {
       router.push('/auth/signin');
     } catch (error) {
       toast.error(getErrorMessage(error));
-      console.error('EmailVerificationResetPasswordForm', error);
     }
   }
 

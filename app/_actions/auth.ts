@@ -46,33 +46,15 @@ export async function validateEmailOnResetPasswordAction(
   if (!zodResult.success)
     return {
       error: getZodErrorMessage(zodResult),
-      data: null,
     };
-  const { email } = zodResult.data;
+  const { data } = zodResult;
 
   try {
-    const user = await db.user.findUnique({
-      where: {
-        email,
-      },
-    });
-    if (!user) throw new Error('Account not found');
-
-    const emailToken = createEmailToken(user.id);
-
-    resend.emails.send({
-      from: 'Portfolio <portfolio-console@aththariq.com>',
-      to: [email],
-      subject: 'Email Verification',
-      react: EmailVerificationResetPassword({
-        url: `${process.env
-          .NEXT_PUBLIC_BASE_URL!}/auth/reset-password/${emailToken}`,
-      }) as React.ReactElement,
-    });
+    await getBackendApi().post('/users/validate-email', data);
 
     return { error: null };
   } catch (error) {
-    return { error: getErrorMessage(error) };
+    return { error: getNestErrorMessage(error) };
   }
 }
 
