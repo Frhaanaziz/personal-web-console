@@ -5,11 +5,9 @@ import {
 } from 'next';
 import { NextAuthOptions, User, getServerSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { db } from '@/server/db';
-import { comparePasswordAction } from '../app/_actions';
-import { createAccessToken, getErrorMessage } from '../lib/utils';
+import { getErrorMessage } from '../lib/utils';
 import Google from 'next-auth/providers/google';
-import { googleLoginAction } from '../app/_actions/auth';
+import { googleLoginAction, signInAction } from '../app/_actions/auth';
 
 export const authOptions = {
   // adapter: PrismaAdapter(prisma),
@@ -33,34 +31,11 @@ export const authOptions = {
           throw new Error('Please enter an email and password');
         }
 
-        const user = await db.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
-        });
+        const { data, error } = await signInAction(credentials);
+        if (error) throw new Error(error);
 
-        if (user && !user.hashedPassword)
-          throw new Error('Please create a password from forgot password');
-
-        if (!user || !user?.hashedPassword)
-          throw new Error('Incorrect email or password');
-
-        if (!user.emailVerified)
-          throw new Error('Please confirm your email to login');
-
-        const passwordMatch = await comparePasswordAction({
-          password: credentials.password,
-          hashedPassword: user.hashedPassword,
-        });
-
-        if (!passwordMatch) {
-          throw new Error('Incorrect email or password');
-        }
-
-        const accessToken = createAccessToken({
-          userId: user.id,
-          role: user.role,
-        });
+        const accessToken = data.accessToken;
+        const user = data.user;
 
         // return { ...user, accessToken };
         return { id: user.id, data: user, accessToken };
