@@ -1,25 +1,13 @@
 'use server';
-import { db } from '@/server/db';
 import {
   emailSchema,
   resetPasswordSchema,
   signUpSchema,
 } from '@/lib/validators/auth';
-import {
-  checkSession,
-  createEmailToken,
-  getErrorMessage,
-  getNestErrorMessage,
-  getZodErrorMessage,
-} from '@/lib/utils';
+import { getNestErrorMessage, getZodErrorMessage } from '@/lib/utils';
 import { z } from 'zod';
-import { Resend } from 'resend';
-import { hashPassword } from '.';
-import EmailVerificationResetPassword from '@/email/EmailVerificationResetPassword';
 import { api } from '@/trpc/server';
 import { getBackendApi } from '@/lib/axios';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function signUpAction(rawData: z.infer<typeof signUpSchema>) {
   const zodResult = signUpSchema.safeParse(rawData);
@@ -70,29 +58,22 @@ export async function resetPasswordAction(
   const { newPassword, userId } = zodResult.data;
 
   try {
-    const hashedPassword = await hashPassword(newPassword);
-    await db.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        hashedPassword,
-        emailVerified: true,
-      },
+    await getBackendApi().post(`/users/${userId}/reset-password`, {
+      newPassword,
     });
 
     return { error: null };
   } catch (error) {
-    return { error: getErrorMessage(error) };
+    return { error: getNestErrorMessage(error) };
   }
 }
 
 export async function googleLoginAction(input: any) {
   try {
-    const data = await api.auth.googleLogin.mutate(input);
+    const result = await getBackendApi().post('/auth/login-google', input);
 
-    return { data, error: null };
+    return { data: result.data, error: null };
   } catch (error) {
-    return { error: getErrorMessage(error), data: null };
+    return { error: getNestErrorMessage(error), data: null };
   }
 }
