@@ -66,10 +66,20 @@ export function checkAccessToken(token: string) {
   }
 }
 
-export function createAccessToken(userId: string) {
-  return jwt.sign({ user: { id: userId } }, process.env.NEXTAUTH_SECRET!, {
-    expiresIn: '1h',
-  });
+export function createAccessToken({
+  userId,
+  role,
+}: {
+  userId: string;
+  role: string;
+}) {
+  return jwt.sign(
+    { user: { id: userId, role } },
+    process.env.NEXTAUTH_SECRET!,
+    {
+      expiresIn: '1h',
+    }
+  );
 }
 
 export function createEmailToken(userId: string) {

@@ -6,7 +6,6 @@ import {
   signUpSchema,
 } from '@/lib/validators/auth';
 import {
-  createAccessToken,
   createEmailToken,
   getErrorMessage,
   getZodErrorMessage,

@@ -18,11 +18,11 @@ export const auth = router({
 
         if (!user) {
           const user = await ctx.db.user.create(input);
-          accessToken = createAccessToken(user.id);
+          accessToken = createAccessToken({ userId: user.id, role: user.role });
 
           return { accessToken, user };
         } else {
-          accessToken = createAccessToken(user.id);
+          accessToken = createAccessToken({ userId: user.id, role: user.role });
           return { accessToken, user };
         }
       } catch (error) {

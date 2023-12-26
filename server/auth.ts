@@ -57,7 +57,10 @@ export const authOptions = {
           throw new Error('Incorrect email or password');
         }
 
-        const accessToken = createAccessToken(user.id);
+        const accessToken = createAccessToken({
+          userId: user.id,
+          role: user.role,
+        });
 
         // return { ...user, accessToken };
         return { id: user.id, data: user, accessToken };
