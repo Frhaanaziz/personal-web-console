@@ -3,11 +3,31 @@ import {
   emailSchema,
   googleLoginSchema,
   resetPasswordSchema,
+  signInSchema,
   signUpSchema,
 } from '@/lib/validators/auth';
 import { getNestErrorMessage, getZodErrorMessage } from '@/lib/utils';
 import { z } from 'zod';
 import { getBackendApi } from '@/lib/axios';
+
+export async function signInAction(rawData: z.infer<typeof signInSchema>) {
+  const zodResult = signInSchema.safeParse(rawData);
+  if (!zodResult.success)
+    return {
+      error: getZodErrorMessage(zodResult),
+      data: null,
+    };
+  const { data } = zodResult;
+
+  try {
+    const result = await getBackendApi().post('/auth/signin', data);
+    console.log(result.data);
+
+    return { data: result.data, error: null };
+  } catch (error) {
+    return { error: getNestErrorMessage(error), data: null };
+  }
+}
 
 export async function signUpAction(rawData: z.infer<typeof signUpSchema>) {
   const zodResult = signUpSchema.safeParse(rawData);
@@ -68,9 +88,7 @@ export async function resetPasswordAction(
   }
 }
 
-export async function googleLoginAction(
-  rawData: z.infer<typeof googleLoginSchema>
-) {
+export async function googleLoginAction(rawData: unknown) {
   const zodResult = googleLoginSchema.safeParse(rawData);
   if (!zodResult.success)
     return {
