@@ -1,14 +1,21 @@
 import ResetPasswordForm from '@/components/forms/ResetPasswordForm';
-import { checkEmailToken } from '@/lib/utils';
+import { getBackendApi } from '@/lib/axios';
+import { checkEmailToken, getNestErrorMessage } from '@/lib/utils';
 
-const ResetPasswordPage = ({
+const ResetPasswordPage = async ({
   params: { token },
 }: {
   params: { token: string };
 }) => {
-  const decoded = checkEmailToken(token);
-  if (typeof decoded === 'string')
-    throw new Error('Invalid token, please request a new one.');
+  let decoded;
+  try {
+    const result = await getBackendApi().post('/auth/verify-email-token', {
+      token,
+    });
+    decoded = result.data;
+  } catch (error) {
+    throw new Error(getNestErrorMessage(error));
+  }
 
   return (
     <main className="flex min-h-screen flex-col justify-center">
