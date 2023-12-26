@@ -1,7 +1,7 @@
 import { getErrorMessage } from '@/lib/utils';
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
-import {db} from '@/server/db';
+import { getBackendApi } from '@/lib/axios';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -13,15 +13,10 @@ export async function GET(request: Request) {
     if (typeof decoded === 'string') {
       throw new Error('Invalid token, please request a new one.');
     }
+    const userId = decoded.user.id;
 
-    await db.user.update({
-      where: {
-        id: decoded.user.id,
-      },
-      data: {
-        emailVerified: true,
-      },
-    });
+    const data = { emailVerified: true };
+    await getBackendApi(token).patch(`/users/${userId}/emailVerified`, data);
 
     return NextResponse.redirect(process.env.NEXT_PUBLIC_BASE_URL!);
   } catch (error) {
