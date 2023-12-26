@@ -1,12 +1,12 @@
 'use server';
 import {
   emailSchema,
+  googleLoginSchema,
   resetPasswordSchema,
   signUpSchema,
 } from '@/lib/validators/auth';
 import { getNestErrorMessage, getZodErrorMessage } from '@/lib/utils';
 import { z } from 'zod';
-import { api } from '@/trpc/server';
 import { getBackendApi } from '@/lib/axios';
 
 export async function signUpAction(rawData: z.infer<typeof signUpSchema>) {
@@ -68,9 +68,19 @@ export async function resetPasswordAction(
   }
 }
 
-export async function googleLoginAction(input: any) {
+export async function googleLoginAction(
+  rawData: z.infer<typeof googleLoginSchema>
+) {
+  const zodResult = googleLoginSchema.safeParse(rawData);
+  if (!zodResult.success)
+    return {
+      error: getZodErrorMessage(zodResult),
+      data: null,
+    };
+  const { data } = zodResult;
+
   try {
-    const result = await getBackendApi().post('/auth/login-google', input);
+    const result = await getBackendApi().post('/auth/login-google', data);
 
     return { data: result.data, error: null };
   } catch (error) {
