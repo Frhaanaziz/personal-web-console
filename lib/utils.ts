@@ -28,6 +28,27 @@ export function getErrorMessage(error: unknown) {
   return message;
 }
 
+export function getNestErrorMessage(error: unknown) {
+  let message: string;
+
+  if (
+    error instanceof Error &&
+    'response' in error &&
+    error.response &&
+    (error.response as { data: any }).data
+  ) {
+    if (typeof (error.response as { data: any }).data.message === 'string') {
+      message = (error.response as { data: any }).data.message;
+    } else {
+      message = (error.response as { data: any }).data.message[0];
+    }
+  } else {
+    message = 'Something went wrong, please try again later.';
+  }
+
+  return message;
+}
+
 export function getZodErrorMessage(result: z.SafeParseError<any>) {
   let errorMessage = '';
 
