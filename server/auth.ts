@@ -132,7 +132,7 @@ export const authOptions = {
   },
   session: {
     strategy: 'jwt',
-    maxAge: 1 * 60 * 60, // 1 hour
+    maxAge: Number(process.env.JWT_EXPIRES_IN!), // 1 day
   },
 } satisfies NextAuthOptions;
 

@@ -98,14 +98,14 @@ export function createAccessToken({
     { user: { id: userId, role } },
     process.env.NEXTAUTH_SECRET!,
     {
-      expiresIn: '1h',
+      expiresIn: Number(process.env.JWT_EXPIRES_IN!),
     }
   );
 }
 
 export function createEmailToken(userId: string) {
   return jwt.sign({ user: { id: userId } }, process.env.EMAIL_SECRET!, {
-    expiresIn: '1d',
+    expiresIn: Number(process.env.JWT_EXPIRES_IN!),
   });
 }
 
