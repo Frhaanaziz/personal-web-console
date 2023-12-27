@@ -5,8 +5,6 @@ import jwt from 'jsonwebtoken';
 import { auth } from '@/server/auth';
 import { notFound } from 'next/navigation';
 import { Session } from 'next-auth';
-import { PER_PAGE } from './constant';
-import { db } from '@/server/db';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -73,47 +71,12 @@ export function formatDateWithTime(date: Date | string | number | null) {
 }
 
 export function checkAccessToken(token: string) {
-  // const session = await auth();
-  // if (!session) return false;
-
-  // const token = session.accessToken as string;
   try {
     const jwtPayload = jwt.verify(token, process.env.NEXTAUTH_SECRET!);
 
-    // return jwtPayload;
     return true;
   } catch (error) {
     return false;
-  }
-}
-
-export function createAccessToken({
-  userId,
-  role,
-}: {
-  userId: string;
-  role: string;
-}) {
-  return jwt.sign(
-    { user: { id: userId, role } },
-    process.env.NEXTAUTH_SECRET!,
-    {
-      expiresIn: Number(process.env.JWT_EXPIRES_IN!),
-    }
-  );
-}
-
-export function createEmailToken(userId: string) {
-  return jwt.sign({ user: { id: userId } }, process.env.EMAIL_SECRET!, {
-    expiresIn: Number(process.env.JWT_EXPIRES_IN!),
-  });
-}
-
-export function checkEmailToken(token: string) {
-  try {
-    return jwt.verify(token, process.env.EMAIL_SECRET!);
-  } catch (error) {
-    return getErrorMessage(error);
   }
 }
 
@@ -136,36 +99,6 @@ export function getInitials(name?: string) {
     return (splitName[0][0] + splitName[1][0]).toUpperCase();
   }
 }
-
-export const getPaginatedResult = async (page: number, table: string) => {
-  // @ts-ignore
-  const totalRow = await db[table].count();
-
-  const savePage = page < 1 ? 1 : page;
-  const rowsPerPage = PER_PAGE;
-  const totalPages = Math.ceil(totalRow / rowsPerPage);
-  let rows = [];
-
-  try {
-    // @ts-ignore
-    rows = await db[table].findMany({
-      skip: (savePage - 1) * rowsPerPage,
-      take: rowsPerPage,
-    });
-  } catch (error) {
-    console.error(`Error fetching rows from table ${table}: `, error);
-    // Return an empty array if there's an error
-    rows = [];
-  }
-
-  return {
-    currentPage: page,
-    totalRow,
-    rowsPerPage,
-    totalPages,
-    content: rows,
-  };
-};
 
 export function generateConfigDefaultValues(
   message: Record<string, { id: string; content: string }>

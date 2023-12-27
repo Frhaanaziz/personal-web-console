@@ -10,7 +10,6 @@ import Google from 'next-auth/providers/google';
 import { googleLoginAction, signInAction } from '../app/_actions/auth';
 
 export const authOptions = {
-  // adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     Google({
@@ -37,7 +36,6 @@ export const authOptions = {
         const accessToken = data.accessToken;
         const user = data.user;
 
-        // return { ...user, accessToken };
         return { id: user.id, data: user, accessToken };
       },
     }),
