@@ -1,6 +1,6 @@
 import ResetPasswordForm from '@/components/forms/ResetPasswordForm';
 import { getBackendApi } from '@/lib/axios';
-import { checkEmailToken, getNestErrorMessage } from '@/lib/utils';
+import { getNestErrorMessage } from '@/lib/utils';
 
 const ResetPasswordPage = async ({
   params: { token },

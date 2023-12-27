@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { router, privateProcedure, adminProcedure } from '@/server/api/trpc';
-import { getPaginatedResult } from '@/lib/utils';
 import { TRPCError } from '@trpc/server';
 import {
   newKeywordSchema,
