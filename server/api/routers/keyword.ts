@@ -7,13 +7,20 @@ import {
   updateKeywordSchema,
 } from '@/lib/validators/keyword';
 import { languageOptions } from '@/lib/constant';
+import { getBackendApi } from '@/lib/axios';
 
 export const keyword = router({
   getAll: privateProcedure
     .input(z.object({ page: z.coerce.number() }))
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
+      const accessToken = ctx.session.accessToken as string;
+
       try {
-        return await getPaginatedResult(input.page, 'keyword');
+        const result = await getBackendApi(accessToken, {
+          page: input.page,
+        }).get('/keywords');
+
+        return result.data;
       } catch (error) {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
@@ -23,42 +30,32 @@ export const keyword = router({
     }),
 
   getById: privateProcedure.input(z.string()).query(async ({ input, ctx }) => {
-    try {
-      const keyword = await ctx.db.keyword.findUnique({
-        where: {
-          id: input,
-        },
-      });
-      if (!keyword)
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Keyword not found',
-        });
+    const accessToken = ctx.session.accessToken as string;
 
-      return keyword;
+    try {
+      const result = await getBackendApi(accessToken).get(`/keywords/${input}`);
+
+      return result.data;
     } catch (error) {
-      throw error;
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Keyword not found',
+      });
     }
   }),
 
   getByGroupAndLocale: privateProcedure
     .input(z.object({ group: z.string(), locale: z.string() }))
     .query(async ({ input, ctx }) => {
-      try {
-        const keywords = await ctx.db.keyword.findMany({
-          where: {
-            group: input.group,
-          },
-          include: {
-            Content: {
-              where: {
-                locale: input.locale,
-              },
-            },
-          },
-        });
+      const accessToken = ctx.session.accessToken as string;
 
-        const message = keywords.reduce((acc, item) => {
+      try {
+        const { data: keywords } = await getBackendApi(accessToken, {
+          group: input.group,
+          locale: input.locale,
+        }).get('/keywords');
+
+        const message = keywords.reduce((acc: any, item: any) => {
           const { keyword, Content, id } = item;
           if (Content[0]) {
             acc[keyword] = { id: Content[0].id, content: Content[0].content };
@@ -78,24 +75,28 @@ export const keyword = router({
   add: adminProcedure
     .input(newKeywordSchema)
     .mutation(async ({ input, ctx }) => {
-      //   for (const [key, value] of Object.entries(inputObj)) {
+      const accessToken = ctx.session.accessToken as string;
+
       try {
         // Create keyword
-        const keyword = await ctx.db.keyword.create({
-          data: {
+        const { data: keyword } = await getBackendApi(accessToken).post(
+          '/keywords',
+          {
             keyword: input.keyword,
             group: input.group,
-          },
-        });
+          }
+        );
 
         // Create content for each language
-        await ctx.db.content.createMany({
-          data: languageOptions.map((option) => ({
-            locale: option.value,
-            content: input.content,
-            keywordId: keyword.id,
-          })),
-        });
+        await Promise.all(
+          languageOptions.map((option) =>
+            getBackendApi(accessToken).post('/contents', {
+              locale: option.value,
+              content: input.content,
+              keywordId: keyword.id,
+            })
+          )
+        );
 
         return keyword;
       } catch (error) {
@@ -109,17 +110,17 @@ export const keyword = router({
   update: adminProcedure
     .input(updateKeywordSchema)
     .mutation(async ({ input, ctx }) => {
+      const accessToken = ctx.session.accessToken as string;
+
       try {
         // Update keyword
-        const keyword = await ctx.db.keyword.update({
-          where: {
-            id: input.id,
-          },
-          data: {
+        const { data: keyword } = await getBackendApi(accessToken).patch(
+          `/keywords/${input.id}`,
+          {
             keyword: input.keyword,
             group: input.group,
-          },
-        });
+          }
+        );
 
         return keyword;
       } catch (error) {
@@ -131,12 +132,10 @@ export const keyword = router({
     }),
 
   delete: adminProcedure.input(z.string()).mutation(async ({ input, ctx }) => {
+    const accessToken = ctx.session.accessToken as string;
+
     try {
-      await ctx.db.keyword.delete({
-        where: {
-          id: input,
-        },
-      });
+      await getBackendApi(accessToken).delete(`/keywords/${input}`);
 
       return true;
     } catch (error) {

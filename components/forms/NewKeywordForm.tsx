@@ -25,6 +25,7 @@ import { useSession } from 'next-auth/react';
 import SubmitButton from '../SubmitButton';
 import { getErrorMessage } from '@/lib/utils';
 import FormFieldShell from '../shell/FormFieldShell';
+import { useRouter } from 'next/navigation';
 
 const NewKeywordForm = () => {
   const defaultValues = {
@@ -40,11 +41,13 @@ const NewKeywordForm = () => {
   const { handleSubmit, control, reset } = form;
 
   const utils = api.useUtils();
+  const router = useRouter();
   const { mutate, isLoading } = api.keyword.add.useMutation({
     onSuccess: () => {
       reset(defaultValues);
       toast.success('Keyword added');
-      utils.keyword.getAll.refetch();
+      utils.keyword.getAll.invalidate();
+      router.refresh();
     },
     onError: (error) => {
       toast.error(getErrorMessage(error));
