@@ -1,3 +1,5 @@
+import { env } from '@/env';
+
 export const webPrimaryColor = '#2663E9';
 
 export const PER_PAGE = 10;
@@ -10,4 +12,5 @@ export const languageOptions = [
 
 export const projects = ['thriftshop'];
 
-export const backendUrl = process.env.BACKEND_URL;
+export const backendUrl = env.BACKEND_URL;
+export const baseUrl = env.NEXT_PUBLIC_BASE_URL;
