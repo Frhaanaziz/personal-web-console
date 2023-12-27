@@ -8,13 +8,14 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { getErrorMessage } from '../lib/utils';
 import Google from 'next-auth/providers/google';
 import { googleLoginAction, signInAction } from '../app/_actions/auth';
+import { env } from '@/lib/env';
 
 export const authOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: env.NEXTAUTH_SECRET,
   providers: [
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: env.GOOGLE_CLIENT_ID!,
+      clientSecret: env.GOOGLE_CLIENT_SECRET!,
       allowDangerousEmailAccountLinking: true,
     }),
     CredentialsProvider({
@@ -103,7 +104,7 @@ export const authOptions = {
   },
   session: {
     strategy: 'jwt',
-    maxAge: Number(process.env.JWT_EXPIRES_IN!), // 1 day
+    maxAge: Number(env.JWT_EXPIRES_IN!), // 1 day
   },
 } satisfies NextAuthOptions;
 

@@ -1,5 +1,5 @@
 import 'next-auth';
-import { type User as UserData } from '@prisma/client';
+import { type User as UserData } from '@/types';
 
 declare module 'next-auth' {
   interface Session extends DefaultSession {

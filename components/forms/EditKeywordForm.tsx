@@ -14,13 +14,13 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import { Keyword } from '@prisma/client';
 import SubmitButton from '../SubmitButton';
 import { updateKeywordSchema } from '@/lib/validators/keyword';
 import { api } from '@/trpc/react';
 import { getErrorMessage } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import FormFieldShell from '../shell/FormFieldShell';
+import { Keyword } from '@/types';
 
 const EditKeywordForm = ({ keyword: data }: { keyword: Keyword }) => {
   const { keyword, group, id } = data;
