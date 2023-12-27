@@ -2,16 +2,13 @@ import { auth } from '@/server/auth';
 import { TRPCError, initTRPC } from '@trpc/server';
 import { ZodError } from 'zod';
 import { Session } from 'next-auth';
-import { checkAccessToken, checkSession } from '@/lib/utils';
-import { db } from '../db';
-import { useSession } from 'next-auth/react';
+import { checkAccessToken } from '@/lib/utils';
 import superjson from 'superjson';
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   const session = await auth();
 
   return {
-    db,
     session,
     ...opts,
   };
