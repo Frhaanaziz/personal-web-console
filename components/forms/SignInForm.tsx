@@ -23,6 +23,7 @@ import { getErrorMessage } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { baseUrl } from '@/lib/constant';
 
 interface Props {
   callbackUrl: string | string[] | undefined;
@@ -50,17 +51,14 @@ const SignInForm = ({ callbackUrl }: Props) => {
         email,
         password,
         redirect: false,
-        callbackUrl:
-          typeof callbackUrl === 'string'
-            ? callbackUrl
-            : process.env.NEXT_PUBLIC_BASE_URL!,
+        callbackUrl: typeof callbackUrl === 'string' ? callbackUrl : baseUrl,
       });
       if (!result) throw new Error('Something went wrong, please try again.');
       if (result.error) throw new Error(result.error);
 
       reset(defaultValues);
       toast.success('Signed in successfully!');
-      router.push(result.url ?? process.env.NEXT_PUBLIC_BASE_URL!);
+      router.push(result.url ?? baseUrl);
     } catch (error) {
       toast.error(getErrorMessage(error));
       console.error('SignInForm', error);
@@ -141,9 +139,7 @@ const SignInForm = ({ callbackUrl }: Props) => {
           onClick={() =>
             signIn('google', {
               callbackUrl:
-                typeof callbackUrl === 'string'
-                  ? callbackUrl
-                  : process.env.NEXT_PUBLIC_BASE_URL!,
+                typeof callbackUrl === 'string' ? callbackUrl : baseUrl,
               // redirect: false,
             })
           }

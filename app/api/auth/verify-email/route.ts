@@ -2,6 +2,7 @@ import { getErrorMessage } from '@/lib/utils';
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { getBackendApi } from '@/lib/axios';
+import { baseUrl } from '@/lib/constant';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -14,7 +15,7 @@ export async function GET(request: Request) {
     const data = { emailVerified: true };
     await getBackendApi(token).patch(`/users/${userId}/emailVerified`, data);
 
-    return NextResponse.redirect(process.env.NEXT_PUBLIC_BASE_URL!);
+    return NextResponse.redirect(baseUrl);
   } catch (error) {
     return NextResponse.json(
       { error: getErrorMessage(error) },
