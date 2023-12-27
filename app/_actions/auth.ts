@@ -21,7 +21,6 @@ export async function signInAction(rawData: z.infer<typeof signInSchema>) {
 
   try {
     const result = await getBackendApi().post('/auth/signin', data);
-    console.log(result.data);
 
     return { data: result.data, error: null };
   } catch (error) {

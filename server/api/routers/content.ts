@@ -1,6 +1,7 @@
 import { z } from 'zod';
-import { router, publicProcedure, adminProcedure } from '@/server/api/trpc';
+import { router, adminProcedure } from '@/server/api/trpc';
 import { TRPCError } from '@trpc/server';
+import { getBackendApi } from '@/lib/axios';
 
 export const content = router({
   updateManyConfig: adminProcedure
@@ -32,14 +33,11 @@ export const content = router({
           message: 'No changes detected',
         });
 
+      const accessToken = ctx.session.accessToken as string;
       const contentUpdates = updates.map(({ id, content }) =>
-        ctx.db.content.update({
-          where: {
-            id,
-          },
-          data: {
-            content,
-          },
+        getBackendApi(accessToken).patch(`/contents/${id}`, {
+          content,
+          locale,
         })
       );
 
