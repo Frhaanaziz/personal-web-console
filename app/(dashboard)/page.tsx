@@ -11,11 +11,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import SignOutButton from '@/components/SignOutButton';
 import { Activity, CreditCard, DollarSign, Users } from 'lucide-react';
 import DashboardOverview from '@/components/DashboardOverview';
-import { auth } from '@/server/auth';
+import { env } from '@/lib/env';
 
 export default async function Home() {
-  const session = await auth();
-
   return (
     <>
       <header className="pb-5 sm:flex sm:items-center sm:justify-between">

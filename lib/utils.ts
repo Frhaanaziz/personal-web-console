@@ -5,7 +5,6 @@ import jwt from 'jsonwebtoken';
 import { auth } from '@/server/auth';
 import { notFound } from 'next/navigation';
 import { Session } from 'next-auth';
-import { env } from './env';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -73,7 +72,7 @@ export function formatDateWithTime(date: Date | string | number | null) {
 
 export function checkAccessToken(token: string) {
   try {
-    const jwtPayload = jwt.verify(token, env.NEXTAUTH_SECRET);
+    const jwtPayload = jwt.verify(token, process.env.NEXTAUTH_SECRET!);
 
     return true;
   } catch (error) {
