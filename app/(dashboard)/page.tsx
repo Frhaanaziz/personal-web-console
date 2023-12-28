@@ -11,7 +11,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import SignOutButton from '@/components/SignOutButton';
 import { Activity, CreditCard, DollarSign, Users } from 'lucide-react';
 import DashboardOverview from '@/components/DashboardOverview';
-import { env } from '@/lib/env';
 
 export default async function Home() {
   return (

@@ -10,5 +10,5 @@ export const languageOptions = [
 
 export const projects = ['thriftshop'];
 
-export const backendUrl = process.env.BACKEND_URL;
-export const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+export const backendUrl = process.env.BACKEND_URL!;
+export const baseUrl = process.env.NEXT_PUBLIC_BASE_URL!;
