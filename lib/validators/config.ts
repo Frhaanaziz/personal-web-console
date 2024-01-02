@@ -55,7 +55,7 @@ export const CSProjectConfigSchema = z.object({
   projectLinkLabel: configSchema,
   overviewHeading: configSchema,
   toolsHeading: configSchema,
-  backHeading: configSchema,
+  sourceCodeHeading: configSchema,
   liveHeading: configSchema,
 
   thriftshopLink: configSchema,

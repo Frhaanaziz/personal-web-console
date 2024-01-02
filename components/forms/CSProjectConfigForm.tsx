@@ -122,11 +122,11 @@ const CSProjectConfigForm = ({
               <FormFieldShell>
                 <FormField
                   control={control}
-                  name={`backHeading`}
+                  name={`sourceCodeHeading`}
                   disabled={isLoading}
                   render={({ field }) => (
                     <FormItem className="grow">
-                      <FormLabel>Back heading</FormLabel>
+                      <FormLabel>Source code heading</FormLabel>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
