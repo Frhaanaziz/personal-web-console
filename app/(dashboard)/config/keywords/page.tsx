@@ -20,7 +20,7 @@ const ConfigKeywordsPage = async ({
     <>
       <HeadingWithAction
         heading="Keywords"
-        label="Create keyword"
+        label="+ Add"
         href="/config/keywords/new"
       />
 
